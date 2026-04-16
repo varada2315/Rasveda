@@ -1,11 +1,13 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Leaf, HeartHandshake, ShieldCheck, ArrowRight } from "lucide-react";
+import { Leaf, HeartHandshake, ShieldCheck, ArrowRight, ShoppingBag, Star, Truck, BadgeCheck, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import chilliImg from "@assets/chilli-powder.png";
 import corianderImg from "@assets/coriander-powder.png";
 import turmericImg from "@assets/turmeric-powder.png";
 import kitchenImg from "@assets/indian-kitchen.png";
+
+const WA_LINK = "https://wa.me/919999999999";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -20,6 +22,23 @@ const staggerContainer = {
   }
 };
 
+const featuredProducts = [
+  { name: "Red Chilli Powder", image: chilliImg, price: 49, badge: "Best Seller", rating: 4.9, reviews: 128 },
+  { name: "Coriander Powder", image: corianderImg, price: 49, badge: "Pure & Fresh", rating: 4.8, reviews: 94 },
+  { name: "Turmeric Powder", image: turmericImg, price: 49, badge: "100% Natural", rating: 5.0, reviews: 76 }
+];
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-1 justify-center">
+      {[1,2,3,4,5].map(s => (
+        <Star key={s} size={14} className={s <= Math.round(rating) ? "fill-accent text-accent" : "text-muted-foreground"} />
+      ))}
+      <span className="text-xs text-muted-foreground ml-1">{rating}</span>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen">
@@ -29,7 +48,7 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1600")' }}
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/55" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
           <motion.div
@@ -37,6 +56,14 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
           >
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-accent text-sm md:text-base tracking-[0.25em] uppercase mb-4 font-medium"
+            >
+              Authentic Family Recipe · Since Generations
+            </motion.p>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-4 drop-shadow-lg">
               Ras Veda Masala
             </h1>
@@ -46,18 +73,55 @@ export default function Home() {
             <p className="text-sm md:text-base tracking-[0.2em] text-white/90 uppercase mb-10 drop-shadow">
               Aroma | Pure Ingredients | Trusted Quality
             </p>
-            <Link href="/contact">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-white rounded-full px-8 py-6 text-lg">
-                Contact Us
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a href={WA_LINK} target="_blank" rel="noreferrer">
+                <Button size="lg" className="bg-accent hover:bg-accent/90 text-white rounded-full px-10 py-6 text-lg flex items-center gap-2 shadow-lg shadow-accent/30">
+                  <ShoppingBag size={20} />
+                  Shop Now
+                </Button>
+              </a>
+              <Link href="/products">
+                <Button size="lg" variant="outline" className="rounded-full px-10 py-6 text-lg border-white/60 text-white hover:bg-white/10 backdrop-blur-sm">
+                  Explore Products
+                </Button>
+              </Link>
+            </div>
           </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center pt-2">
+            <div className="w-1.5 h-1.5 bg-white/60 rounded-full" />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Trust Badges */}
+      <section className="bg-primary py-5">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-16">
+            {[
+              { icon: Truck, label: "Free Delivery Available" },
+              { icon: BadgeCheck, label: "100% Pure Spices" },
+              { icon: Leaf, label: "No Additives or Colours" },
+              { icon: PhoneCall, label: "Order via WhatsApp" }
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-2 text-white/90">
+                <item.icon size={18} className="text-accent" />
+                <span className="text-sm font-medium tracking-wide">{item.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Why Ras Veda? */}
       <section className="py-20 md:py-32 bg-background relative">
-        {/* Subtle decorative dot pattern could go here */}
         <div className="container mx-auto px-4">
           <motion.div 
             initial="hidden"
@@ -98,39 +162,51 @@ export default function Home() {
       {/* Featured Products */}
       <section className="py-20 md:py-32 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-serif text-foreground mb-6 ornament-line inline-block">
+          <div className="text-center mb-4">
+            <p className="text-sm text-accent uppercase tracking-[0.2em] font-medium mb-3">Our Collection</p>
+            <h2 className="text-3xl md:text-5xl font-serif text-foreground mb-4 ornament-line inline-block">
               Featured Products
             </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto mt-4">
+              Handcrafted in small batches for maximum freshness and flavour. Order directly on WhatsApp.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              { name: "Red Chilli Powder", image: chilliImg },
-              { name: "Coriander Powder", image: corianderImg },
-              { name: "Turmeric Powder", image: turmericImg }
-            ].map((product, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-12">
+            {featuredProducts.map((product, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2, duration: 0.5 }}
-                className="group rounded-2xl overflow-hidden bg-background border border-border shadow-md hover:-translate-y-2 transition-transform duration-300"
+                transition={{ delay: i * 0.15, duration: 0.5 }}
+                className="group rounded-2xl overflow-hidden bg-background border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
               >
-                <div className="h-64 overflow-hidden">
+                <div className="h-56 overflow-hidden relative">
                   <img 
                     src={product.image} 
                     alt={product.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+                    {product.badge}
+                  </span>
+                  <span className="absolute top-3 right-3 bg-white/90 text-primary text-xs font-bold px-3 py-1 rounded-full shadow">
+                    In Stock
+                  </span>
                 </div>
-                <div className="p-6 text-center">
+                <div className="p-6 text-center flex flex-col flex-grow">
                   <h3 className="text-xl font-serif font-semibold mb-2">{product.name}</h3>
-                  <p className="text-secondary font-bold text-lg mb-6">₹49 <span className="text-sm font-normal text-muted-foreground">/ 100g</span></p>
-                  <a href="https://wa.me/919999999999" target="_blank" rel="noreferrer">
-                    <Button variant="outline" className="w-full rounded-full border-accent text-accent hover:bg-accent hover:text-white">
-                      Enquire Now
+                  <StarRating rating={product.rating} />
+                  <p className="text-xs text-muted-foreground mt-1 mb-3">{product.reviews} reviews</p>
+                  <div className="flex items-center justify-center gap-2 mb-5 mt-auto">
+                    <span className="text-2xl font-bold text-secondary">₹{product.price}</span>
+                    <span className="text-sm text-muted-foreground">/ 100g</span>
+                  </div>
+                  <a href={WA_LINK} target="_blank" rel="noreferrer">
+                    <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-2 py-5">
+                      <ShoppingBag size={16} />
+                      Shop Now
                     </Button>
                   </a>
                 </div>
@@ -178,19 +254,26 @@ export default function Home() {
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 The aroma filling the entire home, making every meal feel magical. That memory is the foundation of Ras Veda Masala.
               </p>
-              <Link href="/our-story">
-                <Button className="bg-primary hover:bg-primary/90 text-white rounded-full px-8">
-                  Read Our Story
-                </Button>
-              </Link>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/our-story">
+                  <Button className="bg-primary hover:bg-primary/90 text-white rounded-full px-8">
+                    Read Our Story
+                  </Button>
+                </Link>
+                <a href={WA_LINK} target="_blank" rel="noreferrer">
+                  <Button variant="outline" className="rounded-full px-8 border-accent text-accent hover:bg-accent hover:text-white">
+                    <ShoppingBag size={16} className="mr-2" />
+                    Shop Now
+                  </Button>
+                </a>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Mission Banner */}
+      {/* Shop Now Banner */}
       <section className="py-24 bg-secondary text-white text-center px-4 relative overflow-hidden">
-        {/* Background texture/overlay could be added here */}
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -198,10 +281,19 @@ export default function Home() {
           viewport={{ once: true }}
           className="relative z-10 max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl md:text-5xl font-serif italic mb-6 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-serif italic mb-4 leading-tight">
             "To reach every home with the finest masala"
           </h2>
-          <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-accent mx-auto rounded-full mb-8"></div>
+          <p className="text-white/80 mb-8 text-lg">
+            Order now on WhatsApp and get fresh masala delivered to your door.
+          </p>
+          <a href={WA_LINK} target="_blank" rel="noreferrer">
+            <Button size="lg" className="bg-accent hover:bg-accent/90 text-white rounded-full px-12 py-6 text-lg shadow-lg shadow-black/20 flex items-center gap-2 mx-auto">
+              <ShoppingBag size={20} />
+              Shop Now on WhatsApp
+            </Button>
+          </a>
         </motion.div>
       </section>
     </div>
