@@ -34,32 +34,11 @@ export default function OurStory() {
       <section className="py-20 md:py-32 bg-background">
         <div className="container mx-auto px-4 max-w-5xl">
 
-          {/* Story Image */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="mb-16 relative"
-          >
-            <img
-              src={grindingImg}
-              alt="Grandmother and mother grinding masala the traditional way"
-              className="w-full h-[420px] md:h-[520px] object-cover rounded-2xl shadow-xl"
-            />
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-            <div className="absolute bottom-6 left-6 right-6">
-              <p className="text-white font-serif italic text-lg md:text-xl drop-shadow-md">
-                "Like our mother and Taijji before us — grinding with love, one season at a time."
-              </p>
-            </div>
-          </motion.div>
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="prose prose-lg md:prose-xl prose-stone mx-auto max-w-3xl"
+            className="prose prose-lg md:prose-xl prose-stone mx-auto max-w-3xl mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-foreground">Born from Love & Tradition</h2>
             
@@ -82,6 +61,27 @@ export default function OurStory() {
             <p className="text-foreground/80 leading-relaxed">
               Today, Ras Veda Masala exists to bring that same love, purity, and authenticity to your kitchen. We honor the methods of our mothers and grandmothers, ensuring that every packet we seal carries the authentic flavor and true identity of traditional Indian cooking.
             </p>
+          </motion.div>
+
+          {/* Story Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="relative"
+          >
+            <img
+              src={grindingImg}
+              alt="Grandmother and mother grinding masala the traditional way"
+              className="w-full h-[420px] md:h-[520px] object-cover rounded-2xl shadow-xl"
+            />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6">
+              <p className="text-white font-serif italic text-lg md:text-xl drop-shadow-md">
+                "Like our mother and Taijji before us — grinding with love, one season at a time."
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
