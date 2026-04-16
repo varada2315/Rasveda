@@ -2,6 +2,9 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Leaf, HeartHandshake, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import chilliImg from "@assets/chilli-powder.png";
+import corianderImg from "@assets/coriander-powder.png";
+import turmericImg from "@assets/turmeric-powder.png";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -102,9 +105,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { name: "Red Chilli Powder", image: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?w=600" },
-              { name: "Coriander Powder", image: "https://images.unsplash.com/photo-1601050690293-8b64bc4b5a2c?w=600" },
-              { name: "Turmeric Powder", image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=600" }
+              { name: "Red Chilli Powder", image: chilliImg },
+              { name: "Coriander Powder", image: corianderImg },
+              { name: "Turmeric Powder", image: turmericImg }
             ].map((product, i) => (
               <motion.div 
                 key={i}

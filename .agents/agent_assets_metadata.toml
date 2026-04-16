@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "toqJfqf0UK_IBXKDWtSV5"
+uri = "file://attached_assets/our-story-grinding.png"
+type = "image"
+title = "grandma mom grinding masala"
+
+[[generated]]
+id = "e3bcXerI3vBX1MhXRSjli"
+uri = "file://attached_assets/chilli-powder.png"
+type = "image"
+title = "red chilli powder bowl"
+
+[[generated]]
+id = "xEB42KygNkSi1ZtnZgtcx"
+uri = "file://attached_assets/coriander-powder.png"
+type = "image"
+title = "coriander powder bowl"
+
+[[generated]]
+id = "nHMNOTeidnXaB8-D9Zjnr"
+uri = "file://attached_assets/turmeric-powder.png"
+type = "image"
+title = "golden turmeric powder bowl"

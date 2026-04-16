@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Instagram } from "lucide-react";
-import logoSrc from "@assets/97D0136F-0302-4915-9996-773881FEAA46_-_G.P_SUNIL_KUMAR_1776336685690.png";
+import logoSrc from "@assets/97D0136F-0302-4915-9996-773881FEAA46_-_G.P_SUNIL_KUMAR-removeb_1776337046889.png";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();

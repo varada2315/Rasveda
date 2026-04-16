@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import chilliImg from "@assets/chilli-powder.png";
+import corianderImg from "@assets/coriander-powder.png";
+import turmericImg from "@assets/turmeric-powder.png";
 
 const products = [
   {
@@ -9,7 +12,7 @@ const products = [
     desc: "Bold, fiery, and aromatic. Made from sun-dried red chillies for authentic heat and vibrant colour.",
     price: 49,
     weight: "100g",
-    image: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?w=600"
+    image: chilliImg
   },
   {
     id: 2,
@@ -17,7 +20,7 @@ const products = [
     desc: "Freshly ground coriander seeds with a subtle citrus aroma. The backbone of Indian cooking.",
     price: 49,
     weight: "100g",
-    image: "https://images.unsplash.com/photo-1601050690293-8b64bc4b5a2c?w=600"
+    image: corianderImg
   },
   {
     id: 3,
@@ -25,7 +28,7 @@ const products = [
     desc: "Pure, golden turmeric powder. Rich in curcumin, sourced from the finest farms.",
     price: 49,
     weight: "100g",
-    image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=600"
+    image: turmericImg
   }
 ];
 

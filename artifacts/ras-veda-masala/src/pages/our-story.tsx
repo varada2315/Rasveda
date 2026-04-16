@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Check, Heart, Shield, Star } from "lucide-react";
+import grindingImg from "@assets/our-story-grinding.png";
 
 export default function OurStory() {
   return (
@@ -31,12 +32,34 @@ export default function OurStory() {
 
       {/* Long-form story */}
       <section className="py-20 md:py-32 bg-background">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto px-4 max-w-5xl">
+
+          {/* Story Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="mb-16 relative"
+          >
+            <img
+              src={grindingImg}
+              alt="Grandmother and mother grinding masala the traditional way"
+              className="w-full h-[420px] md:h-[520px] object-cover rounded-2xl shadow-xl"
+            />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6">
+              <p className="text-white font-serif italic text-lg md:text-xl drop-shadow-md">
+                "Like our mother and Taijji before us — grinding with love, one season at a time."
+              </p>
+            </div>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="prose prose-lg md:prose-xl prose-stone mx-auto"
+            className="prose prose-lg md:prose-xl prose-stone mx-auto max-w-3xl"
           >
             <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-foreground">Born from Love & Tradition</h2>
             
