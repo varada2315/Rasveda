@@ -1,0 +1,116 @@
+Build a premium, elegant ecommerce website for an Indian masala brand called "Ras Veda Masala". This is a full multi-page website with 4 pages: Home, Our Story, Products, and Contact Us. Also include legal pages: Privacy Policy, Terms & Conditions, and Refund Policy in the footer.
+
+BRAND IDENTITY
+- Brand name: Ras Veda Masala
+- Tagline: "Shuddh Swad, Asli Pehchaan"
+- Description: AROMA | PURE INGREDIENTS | TRUSTED QUALITY
+- USP: Premium quality masala at affordable prices
+- Tone: Premium, warm, trustworthy, rooted in Indian culture
+
+COLOR PALETTE (extract from logo)
+- Primary green: #1A6B2E (dark forest green — used in "Ras" text)
+- Primary amber/brown: #B5651D (warm earthy brown — used in "Veda Masala" text)
+- Accent gold: #D4A017 (golden accent — used in underline decorations)
+- Background: warm off-white #FAF7F0
+- Text: deep brown #2C1A0E
+- Use these colors throughout — buttons, headings, accents, hover states
+
+TYPOGRAPHY
+- Headings: Google Font "Playfair Display" (serif, premium feel)
+- Body: Google Font "Lato" or "Inter"
+- Tagline: italic, slightly larger
+- All section headings should feel editorial and elegant
+
+USE REAL IMAGES FROM UNSPLASH (embed URLs directly):
+- Hero background: https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1600 (spice market, warm tones)
+- Our Story section: https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=800 (Indian spices being ground)
+- Product cards: 
+  * Chilli: https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?w=600
+  * Coriander: https://images.unsplash.com/photo-1601050690293-8b64bc4b5a2c?w=600
+  * Turmeric: https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=600
+- Contact/Footer background texture: https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1200
+
+PAGE 1 — HOME
+- Full-screen hero section with the spice market image as background (dark overlay 50% opacity)
+- Centered text: Brand name large, tagline below in italic gold, then subheadline "AROMA | PURE INGREDIENTS | TRUSTED QUALITY"
+- One CTA button: "Contact Us" — styled in gold/amber with hover effect
+- Navigation bar: sticky, semi-transparent white, logo placeholder left, nav links right (Home, Our Story, Products, Contact Us)
+- Section 2: "Why Ras Veda?" — 3 feature cards with icons: Pure Ingredients / Rooted in Tradition / Affordable Quality. Cards have soft border, cream background, icon in green
+- Section 3: Featured Products — 3 product cards (Chilli, Coriander, Turmeric) with image, name, price, "Enquire Now" button
+- Section 4: Brand story teaser — split layout, left text, right image. Quote from brand story about mother and Taijji
+- Section 5: "Our Mission" banner — full-width warm background, centered text "To reach every home with the finest masala"
+- Footer: logo, tagline, nav links, social media icon for Instagram, legal links, copyright
+
+PAGE 2 — OUR STORY
+- Hero banner with dark overlay and heading "Our Story"
+- Section: "Born from Love & Tradition" — long-form brand story about the memory of mother and Taijji sitting together, carefully selecting spices, roasting, grinding, and blending them with patience and love. The aroma filled the home, and every meal felt special. Write this beautifully in 3-4 paragraphs using this story as the foundation.
+- Mission block: "To reach every home" with decorative divider
+- Vision block: "To be the best masala brand in every kitchen"
+- Values section: 3 cards — Purity, Tradition, Affordability
+
+PAGE 3 — PRODUCTS
+- Page hero with heading "Our Products"
+- Intro text: "Crafted with care, blended with love — each masala is a tribute to authentic Indian cooking."
+- Product grid (3 columns on desktop, 1 on mobile):
+
+  PRODUCT 1: Red Chilli Powder
+  - Image: Unsplash chilli URL above
+  - Description: Bold, fiery, and aromatic. Made from sun-dried red chillies for authentic heat and vibrant colour.
+  - Price: ₹XX / 100g (use placeholder — write "Contact for pricing" or ₹49)
+  - Button: "Enquire on WhatsApp"
+
+  PRODUCT 2: Coriander Powder
+  - Image: Unsplash coriander URL above
+  - Description: Freshly ground coriander seeds with a subtle citrus aroma. The backbone of Indian cooking.
+  - Price: ₹49 / 100g
+  - Button: "Enquire on WhatsApp"
+
+  PRODUCT 3: Turmeric Powder
+  - Image: Unsplash turmeric URL above
+  - Description: Pure, golden turmeric powder. Rich in curcumin, sourced from the finest farms.
+  - Price: ₹49 / 100g
+  - Button: "Enquire on WhatsApp"
+
+- The "Enquire on WhatsApp" button should link to: https://wa.me/91XXXXXXXXXX (use placeholder number)
+- Below grid: "Bulk orders available. Contact us for wholesale pricing."
+
+PAGE 4 — CONTACT US
+- Page hero with heading "Get In Touch"
+- Two-column layout:
+  Left: Contact information cards
+    * Phone: +91-XXXXXXXXXX (placeholder)
+    * Email: info@rasvedamasala.com (placeholder)
+    * WhatsApp: Link to wa.me
+    * Office Address: [Address placeholder], India
+    * Instagram: https://www.instagram.com/rasveda.2026
+  Right: Simple contact form (Name, Phone, Message, Submit button) — form does not need backend, just styled HTML
+
+LEGAL PAGES (in footer, open as modal or separate simple pages)
+- Privacy Policy: Standard privacy policy template for Indian ecommerce — include data collection, usage, storage, third party sharing, user rights, contact info
+- Terms & Conditions: Standard T&C for Indian food brand — purchase terms, product quality, liability, governing law (India)
+- Refund Policy: Standard Indian ecommerce refund policy — 7-day return on damaged/wrong products, no refund on opened packets, process via WhatsApp/email
+
+TECHNICAL REQUIREMENTS
+- Pure HTML, CSS, JavaScript — single file or multi-file, whichever is cleaner
+- Fully responsive: mobile-first design
+- Smooth scroll navigation
+- Sticky header with scroll effect (add background when scrolled)
+- Fade-in animations on scroll using Intersection Observer API
+- WhatsApp floating button (bottom right) linking to wa.me
+- Active nav state highlighting
+- All pages accessible via # anchor links or JS routing (SPA style preferred)
+- No external JS frameworks — vanilla JS only
+- Google Fonts loaded via CDN
+- Hover effects on all buttons and cards
+
+INSTAGRAM LINK
+Use this real Instagram URL: https://www.instagram.com/rasveda.2026?igsh=MWJ5aWluczd5czUxeg%3D%3D&utm_source=qr
+
+IMPORTANT DESIGN DETAILS
+- Never use generic blue/grey corporate colors
+- Every section should feel warm, earthy, and premium
+- Add subtle spice-themed decorative elements (dots, lines, leaf motifs using CSS or Unicode)
+- Product cards: slight shadow, rounded corners, hover lift effect
+- CTA buttons: rounded pill style, amber/gold background, white text, hover darkens
+- Section headings: centered, with a short golden underline accent below
+- Spacing: generous padding (80px sections on desktop, 40px mobile)
