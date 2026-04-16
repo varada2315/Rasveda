@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import chilliImg from "@assets/chilli-powder.png";
 import corianderImg from "@assets/coriander-powder.png";
 import turmericImg from "@assets/turmeric-powder.png";
+import kitchenImg from "@assets/indian-kitchen.png";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -157,8 +158,8 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                src="https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=800" 
-                alt="Traditional Indian Spices" 
+                src={kitchenImg}
+                alt="Authentic Indian kitchen where masala is prepared" 
                 className="rounded-2xl shadow-xl w-full h-[400px] object-cover"
               />
             </div>
