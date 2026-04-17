@@ -6,7 +6,9 @@ import NotFound from "@/pages/not-found";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import ScrollToTop from "@/components/layout/ScrollToTop";
 
 import Home from "@/pages/home";
 import OurStory from "@/pages/our-story";
@@ -19,6 +21,7 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       <Navbar />
       <main className="flex-grow">
         <Switch>
@@ -33,6 +36,7 @@ function Router() {
         </Switch>
       </main>
       <Footer />
+      <BottomNav />
       <WhatsAppButton />
     </div>
   );
