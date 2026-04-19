@@ -1,49 +1,37 @@
-import { motion } from "framer-motion";
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Star, ArrowUpRight } from "lucide-react";
-import chilliImg from "@assets/chilli-powder.png";
-import corianderImg from "@assets/coriander-powder.png";
-import turmericImg from "@assets/turmeric-powder.png";
-
-const WA_LINK = "https://wa.me/919999999999";
-
-const products = [
-  {
-    id: 1,
-    name: "Red Chilli Powder",
-    desc: "Bold, fiery, and aromatic. Made from sun-dried red chillies for authentic heat and vibrant colour.",
-    price: 49,
-    weight: "100g",
-    image: chilliImg,
-    badge: "Best Seller",
-    rating: 4.9,
-    highlights: ["Sun-dried", "Natural Red"]
-  },
-  {
-    id: 2,
-    name: "Coriander Powder",
-    desc: "Freshly ground coriander seeds with a subtle citrus aroma. The backbone of Indian cooking.",
-    price: 49,
-    weight: "100g",
-    image: corianderImg,
-    badge: "Pure & Fresh",
-    rating: 4.8,
-    highlights: ["Stone-ground", "Pure"]
-  },
-  {
-    id: 3,
-    name: "Turmeric Powder",
-    desc: "Pure, golden turmeric powder. Rich in curcumin, sourced from the finest farms.",
-    price: 49,
-    weight: "100g",
-    image: turmericImg,
-    badge: "100% Natural",
-    rating: 5.0,
-    highlights: ["High Curcumin", "Golden"]
-  }
-];
+import { ShoppingBag, Star, ArrowUpRight, Loader2, Plus } from "lucide-react";
+import { useProducts } from "@/hooks/use-products";
+import { useCart } from "@/hooks/use-cart";
+import { Link, useLocation } from "wouter";
 
 export default function Products() {
+  const { data: products, isLoading, error } = useProducts();
+  const [, setLocation] = useLocation();
+  const { addItem } = useCart();
+
+  const handleBuyNow = (product: any) => {
+    addItem(product);
+    setLocation("/checkout");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-accent animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
+        <p className="text-red-500 font-bold">Failed to load products. Please try again later.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       {/* Hero */}
@@ -62,10 +50,10 @@ export default function Products() {
             <span className="bg-accent text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4 inline-block shadow-lg">
               Premium Spices
             </span>
-            <h1 className="text-4xl md:text-8xl font-sans font-black text-white mb-4 tracking-tighter leading-tight">
+            <h1 className="text-5xl md:text-7xl font-sans font-black text-white mb-6 tracking-tighter leading-tight drop-shadow-2xl">
               Our <span className="text-accent italic">Heritage</span>
             </h1>
-            <p className="text-base md:text-2xl text-white/80 max-w-xl mx-auto font-medium leading-relaxed">
+            <p className="text-lg md:text-2xl text-white/80 max-w-xl mx-auto font-medium leading-relaxed drop-shadow-lg">
               Every pack is a promise of purity, tradition, and uncompromising quality.
             </p>
           </motion.div>
@@ -75,85 +63,100 @@ export default function Products() {
       {/* Grid */}
       <section className="py-16 px-6 relative">
         <div className="container mx-auto px-0">
-          {/* Categories/Filters */}
-          <div className="flex gap-3 md:gap-4 overflow-x-auto no-scrollbar pb-10 snap-x -mx-6 px-6">
-            {["All", "Masalas", "Whole", "Powders", "Organic"].map((cat, i) => (
-              <button 
-                key={i} 
-                className={`snap-center px-6 md:px-8 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-black text-[10px] md:text-[11px] uppercase tracking-widest transition-all ${
-                  i === 0 
-                  ? "bg-accent text-white shadow-xl shadow-accent/20 scale-105" 
-                  : "bg-white border border-foreground/5 text-foreground/40"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {products.map((product, i) => (
-              <motion.div 
-                key={product.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-sm hover:shadow-2xl transition-all group flex flex-col"
-              >
-                <div className="h-[300px] md:h-[400px] relative overflow-hidden bg-[#FDFBF7]">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-full object-contain p-10 md:p-12 group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute top-5 left-5 flex flex-col gap-2">
-                    <span className="bg-white/90 backdrop-blur-md text-[8px] md:text-[9px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-sm">
-                      {product.badge}
-                    </span>
-                    {product.highlights.map((h, idx) => (
-                      <span key={idx} className="bg-primary/95 backdrop-blur-md text-white/90 text-[7px] md:text-[8px] font-bold uppercase tracking-widest px-3 py-1 rounded-full w-fit">
-                        {h}
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+          >
+            <AnimatePresence mode="popLayout">
+              {products?.map((product) => (
+                <motion.div 
+                  layout
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="bg-white rounded-[3rem] overflow-hidden border border-foreground/[0.03] shadow-premium hover:shadow-premium-xl transition-all duration-500 hover:-translate-y-2 group flex flex-col"
+                >
+                  <div className="h-[280px] md:h-[350px] relative overflow-hidden product-card-shine">
+                    <Link href={`/product/${product.id}`} className="block w-full h-full p-6 group-hover:p-4 transition-all duration-700">
+                      <div className="w-full h-full rounded-[2.5rem] overflow-hidden shadow-sm border border-black/5">
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                        />
+                      </div>
+                    </Link>
+                    
+                    {/* Primary Badge Overlay */}
+                    <div className="absolute top-10 left-10 pointer-events-none">
+                       <span className="bg-white/90 backdrop-blur-xl text-[9px] font-black uppercase tracking-[0.2em] px-5 py-2 rounded-2xl shadow-sm border border-white/40">
+                        {product.badge}
                       </span>
-                    ))}
+                    </div>
+
+                    <Link href={`/product/${product.id}`} className="absolute bottom-10 right-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-premium-xl hover:bg-accent hover:text-white transition-all transform hover:rotate-12 hover:scale-110">
+                      <ArrowUpRight size={20} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
                   </div>
-                  <button className="absolute bottom-5 right-5 w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg hover:bg-accent hover:text-white transition-all transform hover:rotate-6">
-                    <ArrowUpRight size={20} className="md:w-6 md:h-6" />
-                  </button>
-                </div>
-                
-                <div className="p-8 md:p-10 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-black tracking-tight mb-1.5">{product.name}</h3>
-                      <div className="flex items-center gap-1.5 text-accent">
-                        <Star size={12} fill="currentColor" />
-                        <span className="text-xs font-bold">{product.rating}</span>
-                        <span className="text-foreground/20 text-[10px] ml-1 font-medium">(100+ Reviews)</span>
+                  
+                  <div className="p-10 md:p-12 pt-2 md:pt-4 flex flex-col flex-grow">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="flex flex-col gap-3">
+                        <Link href={`/product/${product.id}`} className="hover:text-accent transition-colors block">
+                          <h3 className="text-2xl md:text-3xl font-black tracking-tight leading-none">{product.name}</h3>
+                        </Link>
+                        
+                        {/* Highlights moved from image to here for better clarity */}
+                        <div className="flex flex-wrap gap-2">
+                          {product.highlights.map((h, idx) => (
+                            <span key={idx} className="bg-secondary/5 text-secondary/70 text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border border-secondary/10">
+                              {h}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black text-foreground/20 uppercase tracking-[0.2em] pt-2">{product.weight}</span>
+                    </div>
+                    
+                    <p className="text-foreground/50 text-base md:text-lg leading-relaxed mb-8 flex-grow font-medium line-clamp-2">
+                      {product.desc}
+                    </p>
+                    
+                    <div className="flex items-center justify-between pt-8 border-t border-foreground/[0.03]">
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-1.5 text-accent mb-2">
+                          <Star size={12} fill="currentColor" />
+                          <span className="text-[11px] font-black tracking-widest">{product.rating}</span>
+                        </div>
+                        <span className="text-3xl font-black tracking-tighter text-foreground font-serif">₹{product.price}</span>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={() => addItem(product)}
+                          variant="outline"
+                          className="magnetic-hover rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-4 md:p-5 font-black transition-all active:scale-95"
+                          title="Add to Cart"
+                        >
+                          <Plus size={18} />
+                        </Button>
+                        <Button 
+                          onClick={() => handleBuyNow(product)}
+                          className="magnetic-hover rounded-2xl bg-primary hover:bg-primary/95 text-white px-6 md:px-8 p-4 md:p-5 font-black shadow-lg transition-all active:scale-95 flex items-center gap-2 text-xs md:text-sm"
+                        >
+                          <ShoppingBag size={16} />
+                          Buy Now
+                        </Button>
                       </div>
                     </div>
-                    <span className="text-[11px] font-bold text-foreground/30">{product.weight}</span>
                   </div>
-                  
-                  <p className="text-foreground/60 text-sm md:text-base leading-relaxed mb-8 flex-grow">
-                    {product.desc}
-                  </p>
-                  
-                  <div className="flex items-center justify-between pt-6 border-t border-foreground/5">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] font-black text-foreground/20 uppercase tracking-widest">Price</span>
-                      <span className="text-2xl md:text-3xl font-black tracking-tight">₹{product.price}</span>
-                    </div>
-                    <a href={WA_LINK} target="_blank" rel="noreferrer">
-                      <Button className="rounded-xl md:rounded-2xl bg-primary hover:bg-primary/90 text-white px-6 md:px-8 py-5 md:py-7 font-black shadow-xl transition-all active:scale-95 flex items-center gap-2 text-xs md:text-base">
-                        <ShoppingBag size={18} />
-                        Add to Cart
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
       

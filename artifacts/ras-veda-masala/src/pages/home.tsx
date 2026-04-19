@@ -1,108 +1,107 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ShoppingBag, ArrowRight, Star, Truck, BadgeCheck, ShieldCheck, Leaf, ArrowUpRight } from "lucide-react";
+import { ShoppingBag, Star, Truck, BadgeCheck, ShieldCheck, Leaf, ArrowUpRight, Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/hooks/use-cart";
+import { useProducts } from "@/hooks/use-products";
 import heroImg from "@assets/hero_spices.png";
-import chilliImg from "@assets/chilli-powder.png";
-import corianderImg from "@assets/coriander-powder.png";
-import turmericImg from "@assets/turmeric-powder.png";
 
-const WA_LINK = "https://wa.me/919999999999";
-
-const featuredProducts = [
-  { name: "Red Chilli Powder", image: chilliImg, price: 95, badge: "Best Seller", rating: 4.9 },
-  { name: "Turmeric Powder", image: turmericImg, price: 120, badge: "100% Pure", rating: 5.0 },
-  { name: "Coriander Powder", image: corianderImg, price: 110, badge: "Aromatic", rating: 4.8 }
-];
-
-const categories = [
-  { name: "Masalas", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400" },
-  { name: "Whole Spices", image: "https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=400" },
-  { name: "Powders", image: "https://images.squarespace-cdn.com/content/v1/56885362a2bab83c66f7f071/1460305886737-F2ZREOM4C5NCD5N89498/spices.jpg?format=1000w" },
-  { name: "Combos", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400" },
-  { name: "New Arrivals", image: "https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=400" }
-];
 
 export default function Home() {
+  const { addItem } = useCart();
+  const { data: allProducts, isLoading } = useProducts();
+  const [, setLocation] = useLocation();
+
+  // Pick top 3 for featured
+  const featuredProducts = allProducts?.slice(0, 3) || [];
+
+  const handleBuyNow = (product: any) => {
+    addItem(product);
+    setLocation("/checkout");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-accent animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       {/* Hero Section */}
-      <section className="relative h-[85dvh] md:h-[90dvh] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] scale-105 hover:scale-100"
+      <section className="relative h-[90dvh] md:h-screen flex items-center justify-center overflow-hidden">
+        <motion.div 
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImg})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-[#FDFBF7]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-[#FDFBF7]" />
         
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center">
+        <div className="relative z-10 text-center px-6 max-w-6xl mx-auto flex flex-col items-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-col items-center"
           >
-            <span className="bg-accent/90 backdrop-blur-md text-white px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4 shadow-lg">
-              Authentic Heritage
-            </span>
-            <h1 className="text-4xl md:text-8xl font-sans font-black text-white mb-4 leading-tight tracking-tight">
-              Pure Spice. <br />
-              <span className="text-accent italic drop-shadow-sm">Bold Flavor.</span>
+            <h1 className="text-5xl md:text-[8.5rem] font-sans font-black text-white mb-6 leading-[0.9] tracking-tighter drop-shadow-2xl px-4">
+              Asli Swad, <br />
+              <span className="text-gradient-spice italic drop-shadow-2xl">Asli Pehchaan.</span>
             </h1>
-            <p className="text-base md:text-2xl text-white/90 mb-8 max-w-lg font-medium leading-relaxed">
-              Experience the true essence of Indian heritage with our family-guarded traditional recipes.
+            <p className="text-lg md:text-3xl text-white/90 mb-10 max-w-2xl font-medium leading-relaxed drop-shadow-lg">
+              Crafted from family-guarded traditional recipes, delivering the true soul of Indian heritage to your kitchen.
             </p>
-            <div className="w-full max-w-xs">
+            <div className="flex flex-col md:flex-row gap-6 w-full max-w-lg items-center justify-center">
               <Link href="/products">
-                <Button size="lg" className="w-full bg-accent hover:bg-accent/90 text-white rounded-2xl py-6 md:py-8 text-base md:text-lg font-black shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-2">
-                  <ShoppingBag size={18} />
-                  Shop Masalas
+                <Button size="lg" className="magnetic-hover w-full md:w-auto bg-accent hover:bg-accent/90 text-white rounded-2xl px-10 py-6 text-lg font-black shadow-xl transition-all flex items-center justify-center gap-3">
+                  <ShoppingBag size={20} />
+                  Explore Collection
+                </Button>
+              </Link>
+              <Link href="/our-story">
+                <Button size="lg" variant="outline" className="magnetic-hover w-full md:w-auto border-white/40 text-white hover:bg-white hover:text-foreground rounded-2xl px-10 py-6 text-lg font-black backdrop-blur-md">
+                  Our Story
                 </Button>
               </Link>
             </div>
+
           </motion.div>
         </div>
+        
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.5 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 flex flex-col items-center gap-4 hidden md:flex"
+        >
+          <span className="text-[10px] uppercase tracking-[0.4em] font-black">Discover</span>
+          <div className="w-px h-16 bg-gradient-to-b from-white/40 to-transparent" />
+        </motion.div>
       </section>
 
-      {/* Category Circles (Cookdtv Style) */}
-      <section className="py-12 -mt-16 md:-mt-24 relative z-20">
-        <div className="container mx-auto">
-          <div className="flex gap-5 md:gap-8 overflow-x-auto no-scrollbar px-6 pb-6 snap-x">
-            {categories.map((cat, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center gap-3 snap-center min-w-[85px] md:min-w-[100px] group cursor-pointer"
-              >
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-1 border-2 border-white/50 shadow-2xl overflow-hidden bg-white/80 backdrop-blur-md group-hover:scale-110 group-hover:border-accent transition-all duration-500">
-                  <img src={cat.image} className="w-full h-full object-cover rounded-full" alt={cat.name} />
-                </div>
-                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/60 group-hover:text-accent transition-colors">{cat.name}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Ribbon */}
-      <section className="py-8 bg-[#FDFBF7]/80 backdrop-blur-xl border-y border-foreground/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-spice-pattern opacity-5" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex gap-6 md:gap-12 overflow-x-auto no-scrollbar scroll-smooth snap-x items-center justify-between">
+      {/* Trust Ribbon (High-End) */}
+      <section className="py-12 bg-white/40 backdrop-blur-2xl border-y border-foreground/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-spice-pattern opacity-[0.03]" />
+        <div className="container mx-auto px-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-center">
             {[
-              { icon: Truck, label: "Express Delivery", sub: "Pan India" },
-              { icon: BadgeCheck, label: "FSSAI Certified", sub: "100% Secure" },
-              { icon: Leaf, label: "Natural Ingredients", sub: "No Colors" },
-              { icon: ShieldCheck, label: "Lab Tested", sub: "Quality Assured" }
+              { icon: Truck, label: "Express Delivery", sub: "Pan India Shipping" },
+              { icon: BadgeCheck, label: "FSSAI Certified", sub: "100% Secure Process" },
+              { icon: Leaf, label: "100% Natural", sub: "Zero Added Colors" },
+              { icon: ShieldCheck, label: "Lab Tested", sub: "Certified Quality" }
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 shrink-0 snap-center px-4 py-2 group">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:bg-accent group-hover:text-white transition-all duration-300 border border-foreground/5">
-                  <item.icon size={18} className="transition-transform group-hover:scale-110" />
+              <div key={i} className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 group">
+                <div className="w-14 h-14 bg-white rounded-3xl flex items-center justify-center shadow-premium group-hover:shadow-accent/20 group-hover:bg-accent group-hover:text-white transition-all duration-500 border border-foreground/5">
+                  <item.icon size={22} className="transition-transform group-hover:rotate-12 group-hover:scale-110" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.1em] text-foreground">{item.label}</span>
-                  <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest">{item.sub}</span>
+                  <span className="text-[12px] font-black uppercase tracking-[0.1em] text-foreground group-hover:text-accent transition-colors">{item.label}</span>
+                  <span className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">{item.sub}</span>
                 </div>
               </div>
             ))}
@@ -110,122 +109,153 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Horizontal Bestsellers */}
-      <section className="py-20 md:py-32 bg-white relative overflow-hidden">
-        {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+      {/* Professional Best Sellers */}
+      <section className="py-16 md:py-24 bg-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
         
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
+        <div className="container mx-auto px-8 relative z-10">
+          <div className="flex flex-col items-center text-center mb-20 md:mb-32">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="h-px w-8 bg-accent/40" />
-                <p className="text-secondary font-black uppercase tracking-[0.3em] text-[10px]">Our Pride</p>
+              <div className="inline-flex items-center gap-4 mb-4 bg-muted/50 px-6 py-2 rounded-full border border-foreground/5 overflow-hidden group">
+                <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                <p className="text-secondary font-black uppercase tracking-[0.4em] text-[10px]">Curated Selection</p>
               </div>
-              <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-none">
-                Best <span className="text-accent italic font-serif">Sellers</span>
+              <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-6">
+                Most <span className="text-accent italic font-serif text-6xl md:text-[7rem]">Loved</span>
               </h2>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Link href="/products" className="group flex items-center gap-2 text-foreground/60 hover:text-accent transition-colors font-bold text-sm bg-muted/30 px-6 py-3 rounded-full border border-foreground/5 backdrop-blur-sm">
-                View All Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              <p className="text-foreground/50 max-w-xl mx-auto font-medium text-lg leading-relaxed mb-10">
+                The essentials of every Indian kitchen, perfected through generations and delivered with uncompromising purity.
+              </p>
+              <Link href="/products">
+                <Button variant="outline" className="rounded-full border-foreground/10 hover:border-accent hover:text-accent font-black tracking-widest text-[10px] px-10 py-6 uppercase transition-all duration-500 hover:shadow-2xl">
+                  View Full Catalog
+                </Button>
               </Link>
             </motion.div>
           </div>
 
-          <div className="flex gap-6 md:gap-8 overflow-x-auto no-scrollbar snap-x pb-12 -mx-6 px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14">
             {featuredProducts.map((product, i) => (
               <motion.div 
                 key={i} 
-                className="min-w-[85vw] md:min-w-[400px] snap-center"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
+                transition={{ delay: i * 0.2, duration: 0.8 }}
+                className="group relative"
               >
-                <div className="group relative bg-[#FDFBF7] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-foreground/5 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] hover:-translate-y-3">
-                  {/* Image Container */}
-                  <div className="aspect-[4/5] md:aspect-square relative overflow-hidden bg-gradient-to-br from-white to-transparent">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-contain p-12 md:p-14 transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1) group-hover:scale-110 group-hover:rotate-2" 
-                    />
-                    
-                    {/* Floating Badge */}
-                    <div className="absolute top-6 left-6">
-                      <div className="bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1)] border border-white/40">
-                        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
-                          {product.badge}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Quick View / Detail Icon */}
-                    <button className="absolute bottom-6 right-6 w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-xl text-foreground/80 hover:bg-accent hover:text-white transition-all duration-300 group/btn transform hover:scale-110 active:scale-95">
-                      <ArrowUpRight size={22} className="group-hover/btn:rotate-12 transition-transform" />
-                    </button>
-                    
-                    {/* Rating Overlay */}
-                    <div className="absolute bottom-6 left-6 glass-card px-3 py-1.5 rounded-xl flex items-center gap-1.5 border-white/50">
-                      <Star size={12} fill="currentColor" className="text-accent" />
-                      <span className="text-[11px] font-black tracking-wider">{product.rating}</span>
-                    </div>
-                  </div>
-
-                  {/* Content Area */}
-                  <div className="p-8 md:p-10 pt-4 md:pt-6">
-                    <div className="mb-6">
-                      <h3 className="text-2xl md:text-3xl font-black tracking-tight mb-2 group-hover:text-accent transition-colors">{product.name}</h3>
-                      <p className="text-foreground/40 text-xs font-medium tracking-wide uppercase">Hand-Picked & Lab Tested</p>
-                    </div>
-                    
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] uppercase font-black tracking-widest text-foreground/30 mb-0.5">Price</span>
-                        <span className="text-2xl md:text-3xl font-black tracking-tighter text-foreground">₹{product.price}</span>
+                <Link href={`/product/${product.id}`} className="block">
+                  <div className="bg-white rounded-[3.5rem] overflow-hidden border border-foreground/[0.03] shadow-premium hover:shadow-premium-xl transition-all duration-700 hover:-translate-y-4 flex flex-col h-full">
+                    {/* Integrated Photography Container */}
+                    <div className="h-[260px] md:h-[320px] relative overflow-hidden product-card-shine">
+                      <div className="w-full h-full p-6 group-hover:p-4 transition-all duration-700">
+                        <div className="w-full h-full rounded-[2.5rem] overflow-hidden shadow-sm border border-black/5">
+                          <img 
+                            src={product.image} 
+                            alt={product.name}
+                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                          />
+                        </div>
                       </div>
                       
-                      <div className="flex-1 max-w-[180px]">
-                        <a href={WA_LINK} target="_blank" rel="noreferrer" className="block">
-                          <Button className="w-full h-14 md:h-16 bg-primary hover:bg-primary/95 text-white rounded-[1.25rem] font-black text-sm md:text-base shadow-[0_15px_30px_-10px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.4)] transition-all active:scale-95 group/buy flex items-center justify-center gap-2">
-                            <span>Add to Cart</span>
-                            <ShoppingBag size={18} className="translate-y-[-1px] group-hover:animate-bounce" />
+                      {/* Floating Badge */}
+                      <div className="absolute top-10 left-10 pointer-events-none">
+                        <div className="bg-white/90 backdrop-blur-xl px-5 py-2 rounded-2xl shadow-sm border border-white/40">
+                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/80">
+                            {product.badge}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Detail Icon */}
+                      <div className="absolute bottom-10 right-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-premium-xl text-foreground/80 group-hover:bg-accent group-hover:text-white transition-all duration-500 transform group-hover:scale-110">
+                        <ArrowUpRight size={20} className="group-hover:rotate-12 transition-transform" />
+                      </div>
+                    </div>
+
+                    <div className="p-10 md:p-12 pt-2 md:pt-4 flex flex-col flex-grow">
+                      <div className="flex flex-col gap-3 mb-6">
+                        <h3 className="text-2xl md:text-3xl font-black tracking-tight mb-0 group-hover:text-accent transition-colors leading-none">{product.name}</h3>
+                        
+                        {/* Integrated Highlights below Title */}
+                        <div className="flex flex-wrap gap-2">
+                          {product.highlights.map((h, idx) => (
+                            <span key={idx} className="bg-secondary/5 text-secondary/70 text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border border-secondary/10">
+                              {h}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <p className="text-foreground/50 text-[10px] font-black tracking-[0.2em] uppercase mb-8">Pure Essence • Lab Tested</p>
+                      
+                      <p className="text-foreground/40 text-sm md:text-base leading-relaxed mb-10 flex-grow font-medium line-clamp-2">
+                        {product.desc}
+                      </p>
+
+                      <div className="flex items-center justify-between gap-6 border-t border-foreground/[0.03] pt-8">
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-1.5 text-accent mb-2">
+                            <Star size={12} fill="currentColor" />
+                            <span className="text-[11px] font-black tracking-widest">{product.rating}</span>
+                          </div>
+                          <span className="text-3xl font-black tracking-tighter text-foreground font-serif">₹{product.price}</span>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <Button 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addItem(product);
+                            }}
+                            variant="outline"
+                            className="magnetic-hover rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-4 md:p-5 font-black transition-all active:scale-95"
+                            title="Add to Cart"
+                          >
+                            <Plus size={18} />
                           </Button>
-                        </a>
+                          <Button 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleBuyNow(product);
+                            }}
+                            className="magnetic-hover rounded-2xl bg-primary hover:bg-primary/95 text-white p-4 md:p-5 font-black shadow-lg transition-all active:scale-95 group/btn"
+                          >
+                            <ShoppingBag size={16} />
+                            Get Now
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* The Ras Veda Secret (Quality Sections) */}
-      <section className="py-20 md:py-32 bg-[#FDFBF7] relative overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mb-16 md:mb-24">
-            <p className="text-secondary font-black uppercase tracking-[0.3em] text-[10px] mb-3">Our Philosophy</p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-none mb-6">
-              The <span className="text-accent italic font-serif">Ras Veda</span> Secret
-            </h2>
-            <p className="text-foreground/60 text-lg md:text-xl font-medium leading-relaxed">
-              We believe in the power of purity. Behind every pack of Ras Veda is a promise of uncompromising quality and ancestral wisdom.
+      {/* The Ras Veda Secret (Premium Interaction) */}
+      <section className="py-16 md:py-24 bg-[#FDFBF7] relative overflow-hidden">
+        <div className="container mx-auto px-8">
+          <div className="flex flex-col md:flex-row items-end justify-between gap-12 mb-20 md:mb-32">
+            <div className="max-w-3xl">
+              <p className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] mb-4">Our Philosophy</p>
+              <h2 className="text-5xl md:text-[7rem] font-black tracking-tighter leading-[0.85] mb-8">
+                The <span className="text-accent italic font-serif">Ras Veda</span> <br /> Secret.
+              </h2>
+            </div>
+            <p className="text-foreground/60 text-lg md:text-2xl font-medium leading-relaxed max-w-md">
+              Beyond the flavor lies a promise. Ancestral wisdom meets modern laboratory precision to deliver uncompromising purity.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14">
             {[
               { 
                 icon: Leaf, 
@@ -235,14 +265,14 @@ export default function Home() {
               },
               { 
                 icon: ShieldCheck, 
-                title: "Laboratory Verified", 
-                desc: "Every batch undergoes rigorous lab testing to ensure zero contamination and peak potency.",
+                title: "Lab Verified", 
+                desc: "Every batch undergoes rigorous ISO-certified lab testing to ensure zero contamination.",
                 color: "bg-blue-50 text-blue-600"
               },
               { 
                 icon: BadgeCheck, 
-                title: "Ancestral Guarded", 
-                desc: "Traditional slow-grinding methods that preserve essential oils and the soul of the spice.",
+                title: "Slow Ground", 
+                desc: "Traditional low-temperature grinding that preserves volatile oils and the soul of the spice.",
                 color: "bg-orange-50 text-orange-600"
               }
             ].map((feature, i) => (
@@ -251,55 +281,55 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                className="group p-10 md:p-12 bg-white rounded-[2.5rem] md:rounded-[3rem] border border-foreground/5 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                transition={{ delay: i * 0.1 }}
+                className="group p-10 md:p-12 bg-white rounded-[3rem] border border-foreground/5 shadow-premium hover:shadow-premium-xl transition-all duration-500 hover:-translate-y-2"
               >
-                <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform`}>
-                  <feature.icon size={28} />
+                <div className={`w-20 h-20 rounded-3xl ${feature.color} flex items-center justify-center mb-10 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                  <feature.icon size={32} />
                 </div>
-                <h3 className="text-2xl font-black mb-4">{feature.title}</h3>
-                <p className="text-foreground/60 font-medium leading-relaxed">{feature.desc}</p>
+                <h3 className="text-3xl font-black mb-6 tracking-tight">{feature.title}</h3>
+                <p className="text-foreground/50 font-medium leading-relaxed text-lg">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Voices of Flavor (Testimonials) */}
-      <section className="py-24 md:py-40 bg-white relative">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col items-center text-center mb-16 md:mb-24">
-            <p className="text-secondary font-black uppercase tracking-[0.3em] text-[10px] mb-3">Customer Love</p>
-            <h2 className="text-4xl md:text-7xl font-black tracking-tight mb-8">Voices of <span className="text-accent italic font-serif">Flavor</span></h2>
+      {/* Voices of Flavor (High-End Testimonials) */}
+      <section className="py-16 md:py-24 bg-white relative">
+        <div className="container mx-auto px-8">
+          <div className="flex flex-col items-center text-center mb-20 md:mb-32">
+            <p className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] mb-4">Community Voices</p>
+            <h2 className="text-5xl md:text-[8rem] font-black tracking-tighter mb-8 leading-none">Voices of <span className="text-accent italic font-serif text-6xl md:text-[7rem]">Flavor.</span></h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
             {[
-              { text: "The aroma takes me back to my grandmother's kitchen. You can actually taste the purity in their Red Chilli powder.", author: "Priya Sharma", role: "Home Chef" },
-              { text: "Never seen such vibrant color and potent flavor without artificial colors. Ras Veda is now a staple in my pantry.", author: "Rahul Verma", role: "Food Enthusiast" },
-              { text: "Finally a brand that cares about lab-testing. I feel safe serving this to my children. Pure and honest.", author: "Meera Iyer", role: "Parent" }
-            ].map((tweet, i) => (
+              { text: "The aroma takes me back to my grandmother's kitchen. You can actually taste the purity in their Red Chilli powder.", author: "Priya Sharma", role: "Professional Chef" },
+              { text: "Potent flavor without any artificial colors. Ras Veda is now a permanent staple in my specialty pantry.", author: "Rahul Verma", role: "Restaurateur" },
+              { text: "Finally a brand that cares about lab-testing. I feel confident serving this to my family daily.", author: "Meera Iyer", role: "Wellness Coach" }
+            ].map((review, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-10 md:p-12 bg-[#FDFBF7] rounded-[2.5rem] md:rounded-[3rem] border border-foreground/5 relative group"
+                className="p-10 md:p-12 bg-[#FDFBF7] rounded-[3rem] border border-foreground/5 relative group hover:bg-white hover:shadow-premium transition-all duration-500"
               >
-                <div className="absolute top-8 right-8 text-accent/20 group-hover:text-accent/40 transition-colors">
-                  <Star size={40} fill="currentColor" />
+                <div className="absolute top-10 right-10 text-accent/10 group-hover:text-accent/30 transition-all duration-500">
+                  <Star size={60} fill="currentColor" />
                 </div>
-                <p className="text-lg md:text-xl font-medium leading-relaxed mb-8 italic text-foreground/80 relative z-10">
-                  "{tweet.text}"
+                <p className="text-xl md:text-2xl font-medium leading-relaxed mb-12 italic text-foreground/80 relative z-10 font-serif">
+                  "{review.text}"
                 </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center font-black text-accent uppercase">
-                    {tweet.author[0]}
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center font-black text-accent uppercase text-xl">
+                    {review.author[0]}
                   </div>
                   <div>
-                    <h4 className="font-black text-sm">{tweet.author}</h4>
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-foreground/40">{tweet.role}</p>
+                    <h4 className="font-black text-lg mb-0.5">{review.author}</h4>
+                    <p className="text-[10px] uppercase tracking-[0.2em] font-black text-foreground/30">{review.role}</p>
                   </div>
                 </div>
               </motion.div>
@@ -308,27 +338,38 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 md:py-32 px-6 bg-[#FDFBF7]">
-        <div className="max-w-7xl mx-auto rounded-[3rem] md:rounded-[4.5rem] overflow-hidden relative bg-primary p-12 md:p-28 text-center shadow-[0_40px_100px_-20px_rgba(var(--primary-rgb),0.3)]">
-          {/* Decorative background effects */}
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+      {/* Final Call to Action */}
+      <section className="py-16 md:py-24 px-8 bg-[#FDFBF7]">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-7xl mx-auto rounded-[4rem] md:rounded-[6rem] overflow-hidden relative bg-primary p-16 md:p-40 text-center shadow-premium-xl"
+        >
+          <div className="absolute inset-0 bg-mandala-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-white/10" />
           
           <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-4xl md:text-8xl font-sans font-black text-white mb-8 md:mb-10 leading-[1.1] tracking-tight">
-              Experience the <span className="text-accent underline decoration-white/20 underline-offset-[12px]">Ras Veda</span> Difference.
+            <h2 className="text-5xl md:text-[9rem] font-sans font-black text-white mb-10 md:mb-16 leading-[0.85] tracking-tighter">
+              The Purest <span className="text-accent underline decoration-white/20 underline-offset-[20px]">Choice</span> <br /> for your family.
             </h2>
-            <p className="text-white/70 text-base md:text-2xl mb-10 md:mb-12 max-w-2xl font-medium leading-relaxed">
-              We never compromise. No fillers, no colors, no nonsense. Just pure, honest spices for your family.
+            <p className="text-white/70 text-lg md:text-3xl mb-12 md:mb-20 max-w-3xl font-medium leading-relaxed">
+              No fillers. No artificial colors. No nonsense. Just pure, lab-tested spices delivered to your doorstep.
             </p>
-            <Link href="/our-story">
-              <Button size="lg" variant="outline" className="text-white border-white/20 hover:bg-white hover:text-primary rounded-2xl px-10 py-6 text-base font-black shadow-2xl">
-                Read Our Story
-              </Button>
-            </Link>
+            <div className="flex flex-col md:flex-row gap-8 items-center justify-center w-full">
+              <Link href="/products">
+                <Button size="lg" className="magnetic-hover w-full md:w-auto bg-accent hover:bg-accent/90 text-white rounded-2xl px-12 py-8 text-xl font-black shadow-xl transition-all">
+                  Shop Now
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button size="lg" variant="outline" className="magnetic-hover w-full md:w-auto text-white border-white/20 hover:bg-white hover:text-primary rounded-2xl px-12 py-8 text-xl font-black">
+                  Inquire Now
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Spacing for BottomNav */}

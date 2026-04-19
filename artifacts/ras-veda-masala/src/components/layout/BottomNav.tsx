@@ -14,7 +14,7 @@ export function BottomNav() {
 
   return (
     <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] w-[92%] max-w-sm">
-      <div className="bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] rounded-[2rem] px-1.5 py-1.5 flex items-center justify-around relative overflow-hidden">
+      <div className="bg-white/90 backdrop-blur-md border border-white/20 shadow-xl rounded-[2rem] px-1.5 py-1.5 flex items-center justify-around relative overflow-hidden">
         {navItems.map((item) => {
           const isActive = location === item.path;
           return (

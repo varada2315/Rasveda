@@ -3,6 +3,8 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, Search, User, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { CartDrawer } from "./CartDrawer";
+import { useCart } from "@/hooks/use-cart";
 import logoSrc from "@assets/97D0136F-0302-4915-9996-773881FEAA46_-_G.P_SUNIL_KUMAR-removeb_1776337046889.png";
 
 const navLinks = [
@@ -16,6 +18,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
+  const { totalItems } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,49 +32,59 @@ export function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
-          ? "bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20 py-2" 
-          : "bg-transparent py-4"
+          ? "glass-navbar py-2 shadow-premium" 
+          : "bg-transparent py-6"
       }`}
     >
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="container mx-auto px-6 md:px-12">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-4 z-50 group">
             <div className="relative">
               <img 
                 src={logoSrc} 
                 alt="Ras Veda Masala" 
-                className={`transition-all duration-500 object-contain ${
-                  isScrolled ? "h-10 md:h-14" : "h-13 md:h-20"
-                } group-hover:scale-105`} 
+                className={`transition-all duration-700 object-contain ${
+                  isScrolled ? "h-10 md:h-14" : "h-14 md:h-24"
+                } group-hover:scale-110 drop-shadow-2xl`} 
               />
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-12">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
-                className={`font-bold tracking-tight text-sm transition-all hover:text-accent relative group ${
+                className={`font-black uppercase tracking-[0.15em] text-[11px] transition-all hover:text-accent relative group ${
                   location === link.path 
                     ? "text-accent" 
                     : isScrolled ? "text-foreground/80" : "text-white"
                 }`}
               >
                 {link.name}
-                <span className={`absolute -bottom-2 left-0 h-0.5 bg-accent transition-all duration-300 ${location === link.path ? "w-full" : "w-0 group-hover:w-full"}`}></span>
+                <span className={`absolute -bottom-2 left-0 h-0.5 bg-accent transition-all duration-500 ${location === link.path ? "w-full" : "w-0 group-hover:w-full"}`}></span>
               </Link>
             ))}
-            <div className="flex items-center gap-6 ml-4 border-l pl-10 border-foreground/10">
-              <button className={`transition-colors h-6 w-6 ${isScrolled ? "text-foreground" : "text-white"} hover:text-accent`}>
+            <div className="flex items-center gap-8 ml-4 border-l pl-12 border-foreground/10">
+              <button className={`magnetic-hover transition-colors h-6 w-6 ${isScrolled ? "text-foreground" : "text-white"} hover:text-accent`}>
                 <Search size={22} strokeWidth={2.5} />
               </button>
-              <button className={`transition-colors h-6 w-6 ${isScrolled ? "text-foreground" : "text-white"} hover:text-accent`}>
+              <button className={`magnetic-hover transition-colors h-6 w-6 ${isScrolled ? "text-foreground" : "text-white"} hover:text-accent`}>
                 <User size={22} strokeWidth={2.5} />
               </button>
+              <CartDrawer>
+                <button className={`magnetic-hover transition-colors h-6 w-6 relative ${isScrolled ? "text-foreground" : "text-white"} hover:text-accent`}>
+                  <ShoppingBag size={22} strokeWidth={2.5} />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-accent text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-in zoom-in duration-300 shadow-lg">
+                      {totalItems}
+                    </span>
+                  )}
+                </button>
+              </CartDrawer>
               <Link href="/products">
-                <Button size="sm" className="bg-accent hover:bg-accent/90 text-white rounded-full px-6 py-5 font-bold shadow-lg shadow-accent/20">
+                <Button size="sm" className="magnetic-hover bg-accent hover:bg-accent/90 text-white rounded-full px-8 py-6 font-black uppercase tracking-widest text-[10px] shadow-xl shadow-accent/20 border-b-4 border-accent-border active:border-b-0 active:translate-y-1 transition-all">
                   Shop Now
                 </Button>
               </Link>
@@ -83,6 +96,16 @@ export function Navbar() {
             <button className={`p-2 transition-colors ${mobileMenuOpen ? "text-foreground" : isScrolled ? "text-foreground" : "text-white"}`}>
               <Search size={22} />
             </button>
+            <CartDrawer>
+              <button className={`p-2 transition-colors relative ${mobileMenuOpen ? "text-foreground" : isScrolled ? "text-foreground" : "text-white"}`}>
+                <ShoppingBag size={22} />
+                {totalItems > 0 && (
+                  <span className="absolute top-1 right-1 bg-accent text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+            </CartDrawer>
             <button 
               className={`p-2 transition-colors ${mobileMenuOpen ? "text-foreground" : isScrolled ? "text-foreground" : "text-white"}`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -133,7 +156,16 @@ export function Navbar() {
               <div className="flex justify-center gap-10 py-6 border-t border-muted">
                 <Search size={24} className="text-foreground/60" />
                 <User size={24} className="text-foreground/60" />
-                <ShoppingBag size={24} className="text-foreground/60" />
+                <CartDrawer>
+                  <button className="relative">
+                    <ShoppingBag size={24} className="text-foreground/60" />
+                    {totalItems > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-accent text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                        {totalItems}
+                      </span>
+                    )}
+                  </button>
+                </CartDrawer>
               </div>
             </div>
             
