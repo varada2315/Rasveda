@@ -4,7 +4,7 @@ import { ShoppingBag, Star, Truck, BadgeCheck, ShieldCheck, Leaf, ArrowUpRight, 
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
 import { useProducts } from "@/hooks/use-products";
-import heroImg from "@assets/hero_spices.png";
+import { QuickAdd } from "@/components/products/QuickAdd";
 
 
 export default function Home() {
@@ -15,10 +15,6 @@ export default function Home() {
   // Pick top 3 for featured
   const featuredProducts = allProducts?.slice(0, 3) || [];
 
-  const handleBuyNow = (product: any) => {
-    addItem(product);
-    setLocation("/checkout");
-  };
 
   if (isLoading) {
     return (
@@ -37,7 +33,7 @@ export default function Home() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImg})` }}
+          style={{ backgroundImage: `url('/vibrant-colors-spices-row-generated-by-ai.jpg')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-[#FDFBF7]" />
         
@@ -48,23 +44,23 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-col items-center"
           >
-            <h1 className="text-5xl md:text-[8.5rem] font-sans font-black text-white mb-6 leading-[0.9] tracking-tighter drop-shadow-2xl px-4">
+            <h1 className="text-5xl md:text-9xl font-sans font-black text-white mb-6 leading-[0.9] tracking-tighter drop-shadow-2xl px-4 uppercase">
               Asli Swad, <br />
               <span className="text-gradient-spice italic drop-shadow-2xl">Asli Pehchaan.</span>
             </h1>
-            <p className="text-lg md:text-3xl text-white/90 mb-10 max-w-2xl font-medium leading-relaxed drop-shadow-lg">
+            <p className="text-lg md:text-2xl text-white/90 mb-10 max-w-3xl font-medium leading-relaxed drop-shadow-lg">
               Crafted from family-guarded traditional recipes, delivering the true soul of Indian heritage to your kitchen.
             </p>
-            <div className="flex flex-col md:flex-row gap-6 w-full max-w-lg items-center justify-center">
+            <div className="flex flex-col md:flex-row gap-6 w-full max-w-xl items-center justify-center">
               <Link href="/products">
-                <Button size="lg" className="magnetic-hover w-full md:w-auto bg-accent hover:bg-accent/90 text-white rounded-2xl px-10 py-6 text-lg font-black shadow-xl transition-all flex items-center justify-center gap-3">
-                  <ShoppingBag size={20} />
-                  Explore Collection
+                <Button size="lg" className="magnetic-hover w-full md:w-auto bg-accent hover:bg-accent/95 text-white rounded-2xl px-12 py-8 text-xl font-black shadow-2xl transition-all flex items-center justify-center gap-3">
+                  <ShoppingBag size={24} />
+                  Shop Range
                 </Button>
               </Link>
               <Link href="/our-story">
-                <Button size="lg" variant="outline" className="magnetic-hover w-full md:w-auto border-white/40 text-white hover:bg-white hover:text-foreground rounded-2xl px-10 py-6 text-lg font-black backdrop-blur-md">
-                  Our Story
+                <Button size="lg" variant="outline" className="magnetic-hover w-full md:w-auto border-white/40 text-white hover:bg-white hover:text-foreground rounded-2xl px-12 py-8 text-xl font-black backdrop-blur-md">
+                  Heritage Story
                 </Button>
               </Link>
             </div>
@@ -208,27 +204,8 @@ export default function Home() {
                         </div>
                         
                         <div className="flex gap-2">
-                          <Button 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              addItem(product);
-                            }}
-                            variant="outline"
-                            className="magnetic-hover rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-4 md:p-5 font-black transition-all active:scale-95"
-                            title="Add to Cart"
-                          >
-                            <Plus size={18} />
-                          </Button>
-                          <Button 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleBuyNow(product);
-                            }}
-                            className="magnetic-hover rounded-2xl bg-primary hover:bg-primary/95 text-white p-4 md:p-5 font-black shadow-lg transition-all active:scale-95 group/btn"
-                          >
-                            <ShoppingBag size={16} />
-                            Get Now
-                          </Button>
+                          <QuickAdd product={product} />
+                          <QuickAdd product={product} variant="buyNow" />
                         </div>
                       </div>
                     </div>
@@ -240,131 +217,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Ras Veda Secret (Premium Interaction) */}
-      <section className="py-16 md:py-24 bg-[#FDFBF7] relative overflow-hidden">
-        <div className="container mx-auto px-8">
-          <div className="flex flex-col md:flex-row items-end justify-between gap-12 mb-20 md:mb-32">
-            <div className="max-w-3xl">
-              <p className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] mb-4">Our Philosophy</p>
-              <h2 className="text-5xl md:text-[7rem] font-black tracking-tighter leading-[0.85] mb-8">
-                The <span className="text-accent italic font-serif">Ras Veda</span> <br /> Secret.
-              </h2>
-            </div>
-            <p className="text-foreground/60 text-lg md:text-2xl font-medium leading-relaxed max-w-md">
-              Beyond the flavor lies a promise. Ancestral wisdom meets modern laboratory precision to deliver uncompromising purity.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14">
-            {[
-              { 
-                icon: Leaf, 
-                title: "Zero Fillers", 
-                desc: "100% pure spice. No starch, no artificial colors, and absolutely no added preservatives.",
-                color: "bg-green-50 text-green-600"
-              },
-              { 
-                icon: ShieldCheck, 
-                title: "Lab Verified", 
-                desc: "Every batch undergoes rigorous ISO-certified lab testing to ensure zero contamination.",
-                color: "bg-blue-50 text-blue-600"
-              },
-              { 
-                icon: BadgeCheck, 
-                title: "Slow Ground", 
-                desc: "Traditional low-temperature grinding that preserves volatile oils and the soul of the spice.",
-                color: "bg-orange-50 text-orange-600"
-              }
-            ].map((feature, i) => (
+
+      {/* WhatsApp Community Section */}
+      <section className="py-20 md:py-32 bg-[#25D366] relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
+        
+        <div className="container mx-auto px-8 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-16 md:gap-24">
+            <div className="flex-1 text-white text-center lg:text-left">
               <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group p-10 md:p-12 bg-white rounded-[3rem] border border-foreground/5 shadow-premium hover:shadow-premium-xl transition-all duration-500 hover:-translate-y-2"
+                transition={{ duration: 0.8 }}
               >
-                <div className={`w-20 h-20 rounded-3xl ${feature.color} flex items-center justify-center mb-10 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
-                  <feature.icon size={32} />
+                <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-md px-6 py-2 rounded-full border border-white/30 mb-8">
+                  <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Join the movement</span>
                 </div>
-                <h3 className="text-3xl font-black mb-6 tracking-tight">{feature.title}</h3>
-                <p className="text-foreground/50 font-medium leading-relaxed text-lg">{feature.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Voices of Flavor (High-End Testimonials) */}
-      <section className="py-16 md:py-24 bg-white relative">
-        <div className="container mx-auto px-8">
-          <div className="flex flex-col items-center text-center mb-20 md:mb-32">
-            <p className="text-secondary font-black uppercase tracking-[0.4em] text-[10px] mb-4">Community Voices</p>
-            <h2 className="text-5xl md:text-[8rem] font-black tracking-tighter mb-8 leading-none">Voices of <span className="text-accent italic font-serif text-6xl md:text-[7rem]">Flavor.</span></h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-            {[
-              { text: "The aroma takes me back to my grandmother's kitchen. You can actually taste the purity in their Red Chilli powder.", author: "Priya Sharma", role: "Professional Chef" },
-              { text: "Potent flavor without any artificial colors. Ras Veda is now a permanent staple in my specialty pantry.", author: "Rahul Verma", role: "Restaurateur" },
-              { text: "Finally a brand that cares about lab-testing. I feel confident serving this to my family daily.", author: "Meera Iyer", role: "Wellness Coach" }
-            ].map((review, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="p-10 md:p-12 bg-[#FDFBF7] rounded-[3rem] border border-foreground/5 relative group hover:bg-white hover:shadow-premium transition-all duration-500"
-              >
-                <div className="absolute top-10 right-10 text-accent/10 group-hover:text-accent/30 transition-all duration-500">
-                  <Star size={60} fill="currentColor" />
-                </div>
-                <p className="text-xl md:text-2xl font-medium leading-relaxed mb-12 italic text-foreground/80 relative z-10 font-serif">
-                  "{review.text}"
+                <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-8 leading-none">
+                  Our WhatsApp <br />
+                  <span className="italic font-serif opacity-90">Community.</span>
+                </h2>
+                <p className="text-white/80 text-xl md:text-2xl font-medium leading-relaxed max-w-xl mb-12">
+                  Scan the QR code to join the RasVeda Masala WhatsApp group. Get early access to new blends, secret recipes, and exclusive community discounts.
                 </p>
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center font-black text-accent uppercase text-xl">
-                    {review.author[0]}
+                <div className="flex flex-col md:flex-row gap-6 items-center lg:items-start">
+                  <div className="flex items-center gap-4 text-white/60 text-sm font-bold">
+                    <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">1</div>
+                    <span>Open WhatsApp camera</span>
                   </div>
-                  <div>
-                    <h4 className="font-black text-lg mb-0.5">{review.author}</h4>
-                    <p className="text-[10px] uppercase tracking-[0.2em] font-black text-foreground/30">{review.role}</p>
+                  <div className="flex items-center gap-4 text-white/60 text-sm font-bold">
+                    <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">2</div>
+                    <span>Scan the code</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-white/60 text-sm font-bold">
+                    <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">3</div>
+                    <span>Join & Jam!</span>
                   </div>
                 </div>
               </motion.div>
-            ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative p-4 md:p-8 bg-white rounded-[3rem] md:rounded-[4rem] shadow-2xl group"
+            >
+              <div className="absolute -inset-4 bg-white/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <div className="relative w-80 h-80 md:w-[450px] md:h-[450px] overflow-hidden rounded-[2.5rem] md:rounded-[3.5rem] bg-white flex items-center justify-center">
+                <img 
+                  src="/whatsapp-qr.png" 
+                  alt="RasVeda WhatsApp Group QR Code" 
+                  className="w-[200%] h-[200%] max-w-none object-contain absolute scale-[1.1]"
+                  style={{ top: '-28%' }}
+                />
+              </div>
+              <div className="mt-8 text-center text-black/40 font-black text-[9px] uppercase tracking-[0.4em]">
+                Scan to join instantly
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Final Call to Action */}
-      <section className="py-16 md:py-24 px-8 bg-[#FDFBF7]">
+      <section className="py-20 md:py-32 px-6 bg-[#FDFBF7]">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-7xl mx-auto rounded-[4rem] md:rounded-[6rem] overflow-hidden relative bg-primary p-16 md:p-40 text-center shadow-premium-xl"
+          className="max-w-6xl mx-auto rounded-[3rem] overflow-hidden relative bg-primary p-12 md:p-24 text-center shadow-2xl"
         >
-          <div className="absolute inset-0 bg-mandala-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-white/10" />
+          <div className="absolute inset-0 bg-mandala-overlay opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/10" />
           
           <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-5xl md:text-[9rem] font-sans font-black text-white mb-10 md:mb-16 leading-[0.85] tracking-tighter">
-              The Purest <span className="text-accent underline decoration-white/20 underline-offset-[20px]">Choice</span> <br /> for your family.
+            <h2 className="text-4xl md:text-7xl font-sans font-black text-white mb-8 md:mb-12 leading-[1.1] tracking-tight">
+              The Purest <span className="text-accent">Choice</span> <br /> for your family.
             </h2>
-            <p className="text-white/70 text-lg md:text-3xl mb-12 md:mb-20 max-w-3xl font-medium leading-relaxed">
-              No fillers. No artificial colors. No nonsense. Just pure, lab-tested spices delivered to your doorstep.
+            <p className="text-white/80 text-lg md:text-xl mb-10 md:mb-16 max-w-2xl font-medium leading-relaxed">
+              No fillers. No artificial colors. No nonsense. <br className="hidden md:block" /> 
+              Just pure, lab-tested spices delivered to your doorstep.
             </p>
-            <div className="flex flex-col md:flex-row gap-8 items-center justify-center w-full">
+            <div className="flex flex-col sm:flex-row gap-6 items-center justify-center w-full">
               <Link href="/products">
-                <Button size="lg" className="magnetic-hover w-full md:w-auto bg-accent hover:bg-accent/90 text-white rounded-2xl px-12 py-8 text-xl font-black shadow-xl transition-all">
-                  Shop Now
+                <Button size="lg" className="magnetic-hover w-full sm:w-auto bg-accent hover:bg-accent/95 text-white rounded-xl px-10 py-7 text-lg font-black shadow-lg transition-all active:scale-95">
+                  Shop Spices
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="magnetic-hover w-full md:w-auto text-white border-white/20 hover:bg-white hover:text-primary rounded-2xl px-12 py-8 text-xl font-black">
-                  Inquire Now
+                <Button size="lg" variant="outline" className="magnetic-hover w-full sm:w-auto text-white border-white/30 hover:bg-white hover:text-primary rounded-xl px-10 py-7 text-lg font-black transition-colors">
+                  Contact Us
                 </Button>
               </Link>
             </div>

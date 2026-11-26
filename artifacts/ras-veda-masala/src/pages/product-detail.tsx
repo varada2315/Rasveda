@@ -11,10 +11,20 @@ export default function ProductDetail() {
   const [, params] = useRoute("/product/:id");
   const { data: products, isLoading } = useProducts();
   const { addItem } = useCart();
-  const [quantity, setQuantity] = useState(1);
-
   const id = params?.id ? parseInt(params.id) : null;
   const product = products?.find((p) => p.id === id);
+  const isSample = product?.price === 1;
+
+  const [quantity, setQuantity] = useState(1);
+  const [selectedWeight, setSelectedWeight] = useState(isSample ? "1g" : "100g");
+
+  const weightOptions = isSample ? [{ label: "1g", weight: 1 }] : [
+    { label: "50g", weight: 50 },
+    { label: "100g", weight: 100 },
+    { label: "200g", weight: 200 },
+    { label: "500g", weight: 500 },
+    { label: "1kg", weight: 1000 },
+  ];
 
   if (isLoading) {
     return (
@@ -38,9 +48,18 @@ export default function ProductDetail() {
     );
   }
 
+  const getPrice = () => {
+    if (isSample) return 1;
+    const option = weightOptions.find(o => o.label === selectedWeight);
+    const weight = option?.weight || 100;
+    return Math.round(weight * (product?.pricePerGram || 0.225));
+  };
+
   const handleAddToCart = () => {
+    if (!product) return;
+    const price = getPrice();
     for (let i = 0; i < quantity; i++) {
-      addItem(product);
+      addItem(product, selectedWeight, price);
     }
   };
 
@@ -109,11 +128,12 @@ export default function ProductDetail() {
                 {product.name}
               </h1>
               
-              <div className="flex items-baseline gap-4 mb-8">
-                <span className="text-4xl md:text-5xl font-black text-primary">₹{product.price}</span>
-                <span className="text-lg font-bold text-foreground/40 line-through">₹{Math.round(product.price * 1.5)}</span>
+              <div className="flex items-baseline gap-4 mb-2">
+                <span className="text-4xl md:text-5xl font-black text-primary transition-all duration-300">₹{getPrice()}</span>
+                <span className="text-lg font-bold text-foreground/40 line-through">₹{Math.round(getPrice() * 1.5)}</span>
                 <span className="bg-green-500/10 text-green-600 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest">Save 33%</span>
               </div>
+              <p className="text-[10px] font-black text-accent uppercase tracking-widest mb-8">*Prices inclusive of all taxes</p>
 
               <p className="text-lg md:text-xl text-foreground/60 leading-relaxed font-medium">
                 {product.fullDesc || product.desc}
@@ -122,6 +142,27 @@ export default function ProductDetail() {
 
             {/* Selection */}
             <div className="space-y-8 mb-12">
+              {!isSample && (
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30 mb-4 block">Select Weight</span>
+                  <div className="flex flex-wrap gap-3">
+                    {weightOptions.map((option) => (
+                      <button
+                        key={option.label}
+                        onClick={() => setSelectedWeight(option.label)}
+                        className={`px-6 py-3 rounded-xl font-black text-sm transition-all duration-300 border-2 ${
+                          selectedWeight === option.label
+                            ? "bg-accent border-accent text-white shadow-lg shadow-accent/20 scale-105"
+                            : "bg-white border-foreground/5 text-foreground/40 hover:border-accent/20 hover:text-accent"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30 mb-4 block">Select Quantity</span>
                 <div className="flex items-center gap-6">
@@ -141,7 +182,7 @@ export default function ProductDetail() {
                       <Plus size={18} />
                     </button>
                   </div>
-                  <span className="text-foreground/40 font-bold">{product.weight} per pack</span>
+                  <span className="text-foreground/40 font-bold">Packs</span>
                 </div>
               </div>
 
@@ -213,10 +254,7 @@ export default function ProductDetail() {
               Rasveda Masala
             </p>
           </div>
-          <p className="text-[9px] font-bold uppercase tracking-widest text-center md:text-right">
-            Manufactured By: Northern Spices <br />
-            A-73/ A-74 Dadu Nagar, Phulera, Jaipur-303338
-          </p>
+
         </div>
       </div>
     </div>

@@ -8,19 +8,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingBag, CreditCard, CheckCircle2, Loader2, ArrowLeft, BadgeCheck, User, ChevronDown } from "lucide-react";
+import { ShoppingBag, CreditCard, CheckCircle2, Loader2, ArrowLeft, BadgeCheck, User, ChevronDown, Phone } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { Link } from "wouter";
 
 const formSchema = z.object({
   customerName: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email"),
-  address: z.string().min(10, "Full address is required"),
   phone: z.string().min(10, "Valid phone number is required"),
+  addressLine1: z.string().min(5, "House No. / Street is required"),
+  landmark: z.string().optional(),
+  city: z.string().min(2, "City is required"),
+  state: z.string().min(2, "State is required"),
+  pincode: z.string().min(6, "Valid Pincode is required"),
 });
 
 // Razorpay key from provided credentials
-const RA_KEY_ID = "rzp_test_SetXaPlwZRBFpv";
+const RA_KEY_ID = "rzp_live_Sfgsi1ChrwJUjJ";
 
 export default function Checkout() {
   const { toast } = useToast();
@@ -46,7 +50,7 @@ export default function Checkout() {
   const nextStep = async () => {
     const fields = currentStep === 1 
       ? ["customerName", "email", "phone"] 
-      : ["address"];
+      : ["addressLine1", "city", "state", "pincode"];
     
     //@ts-ignore
     const isValid = await form.trigger(fields);
@@ -66,19 +70,32 @@ export default function Checkout() {
     defaultValues: {
       customerName: "",
       email: "",
-      address: "",
       phone: "",
+      addressLine1: "",
+      landmark: "",
+      city: "",
+      state: "",
+      pincode: "",
     },
-  });
+});
 
   async function handlePayment(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      // 1. Create Razorpay Order
+      // 1. Create Internal Pending Order & Razorpay Order
       const res = await fetch("/api/payment/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: totalPrice }),
+        body: JSON.stringify({ 
+          amount: totalPrice,
+          orderDetails: {
+            ...values,
+            address: `${values.addressLine1}, ${values.landmark ? values.landmark + ', ' : ''}${values.city}, ${values.state} - ${values.pincode}`,
+            items: items.map(item => ({ productId: item.id, quantity: item.quantity, weight: item.selectedWeight })),
+            total: totalPrice,
+            paymentId: "", // Will be updated after payment
+          }
+        }),
       });
 
       if (!res.ok) throw new Error("Failed to initialize payment");
@@ -105,6 +122,9 @@ export default function Checkout() {
         theme: {
           color: "#19662D", // Primary green
         },
+        notes: {
+          internalOrderId: orderData.internalOrderId?.toString()
+        },
         modal: {
           ondismiss: () => setIsSubmitting(false),
         }
@@ -129,7 +149,8 @@ export default function Checkout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          items: items.map(item => ({ productId: item.id, quantity: item.quantity })),
+          address: `${values.addressLine1}, ${values.landmark ? values.landmark + ', ' : ''}${values.city}, ${values.state} - ${values.pincode}`,
+          items: items.map(item => ({ productId: item.id, quantity: item.quantity, weight: item.selectedWeight })),
           total: totalPrice,
           paymentId: rzpPaymentId, // Storing for reference
         }),
@@ -243,7 +264,7 @@ export default function Checkout() {
       
       <div className="space-y-8 mb-12 max-h-[450px] overflow-y-auto no-scrollbar pr-2 relative z-10">
         {items.map((item) => (
-          <div key={item.id} className="flex gap-6 items-center group/item">
+          <div key={`${item.id}-${item.selectedWeight}`} className="flex gap-6 items-center group/item">
             <div className="w-18 h-18 md:w-24 md:h-24 bg-[#FDFBF7] rounded-3xl overflow-hidden p-4 border border-foreground/5 relative shrink-0 transition-transform group-hover/item:scale-105 duration-500">
               <img src={item.image} alt={item.name} className="w-full h-full object-contain group-hover/item:rotate-3 transition-transform duration-500" />
               <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] w-6 h-6 rounded-full flex items-center justify-center font-black shadow-lg border-2 border-white">
@@ -252,7 +273,7 @@ export default function Checkout() {
             </div>
             <div className="flex flex-col flex-grow min-w-0">
               <span className="font-black text-base md:text-lg truncate mb-1">{item.name}</span>
-              <span className="text-[11px] text-foreground/30 font-black uppercase tracking-widest">{item.weight}</span>
+              <span className="text-[11px] text-accent font-black uppercase tracking-widest">{item.selectedWeight}</span>
               <span className="font-black text-accent text-lg mt-2 tracking-tight">₹{item.price * item.quantity}</span>
             </div>
           </div>
@@ -393,7 +414,7 @@ export default function Checkout() {
                               <FormControl>
                                 <div className="relative group">
                                   <User size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" />
-                                  <Input placeholder="Enter full name" {...field} className="rounded-2xl border-foreground/10 bg-[#FDFBF7] h-16 md:h-20 pl-14 pr-8 font-bold focus:ring-accent transition-all" />
+                                  <Input placeholder="Enter full name" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 pl-14 pr-8 font-bold focus:ring-accent transition-all" />
                                 </div>
                               </FormControl>
                               <FormMessage className="text-[10px] font-bold" />
@@ -409,7 +430,7 @@ export default function Checkout() {
                               <FormControl>
                                 <div className="relative group">
                                   <BadgeCheck size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" />
-                                  <Input placeholder="your@email.com" {...field} className="rounded-2xl border-foreground/10 bg-[#FDFBF7] h-16 md:h-20 pl-14 pr-8 font-bold focus:ring-accent transition-all" />
+                                  <Input placeholder="your@email.com" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 pl-14 pr-8 font-bold focus:ring-accent transition-all" />
                                 </div>
                               </FormControl>
                               <FormMessage className="text-[10px] font-bold" />
@@ -418,27 +439,30 @@ export default function Checkout() {
                         />
                       </div>
 
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">Mobile Number</FormLabel>
-                            <FormControl>
-                              <Input placeholder="+91 00000 00000" {...field} className="rounded-2xl border-foreground/10 bg-[#FDFBF7] h-16 md:h-20 px-8 font-bold focus:ring-accent transition-all" />
-                            </FormControl>
-                            <FormMessage className="text-[10px] font-bold" />
-                          </FormItem>
-                        )}
-                      />
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">Mobile Number</FormLabel>
+                              <FormControl>
+                                <div className="relative group">
+                                  <Phone size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                                  <Input placeholder="+91 86909 95060" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 pl-14 pr-8 font-bold focus:ring-accent transition-all" />
+                                </div>
+                              </FormControl>
+                              <FormMessage className="text-[10px] font-bold" />
+                            </FormItem>
+                          )}
+                        />
 
                       <Button 
                         type="button" 
                         onClick={nextStep}
-                        className="w-full rounded-[2rem] bg-accent hover:bg-accent/95 py-10 md:py-12 text-2xl font-black shadow-2xl shadow-accent/20 hover:scale-[1.01] transition-all active:scale-95 group text-white"
+                        className="w-full rounded-2xl bg-accent hover:bg-accent/95 py-6 md:py-8 text-xl font-black shadow-xl shadow-accent/20 hover:scale-[1.01] transition-all active:scale-95 group text-white"
                       >
                         Continue to Shipping
-                        <ArrowLeft className="ml-3 rotate-180 group-hover:translate-x-1 transition-transform" size={24} />
+                        <ArrowLeft className="ml-3 rotate-180 group-hover:translate-x-1 transition-transform" size={20} />
                       </Button>
                     </motion.div>
                   )}
@@ -461,23 +485,79 @@ export default function Checkout() {
                         </Button>
                       </div>
 
-                      <FormField
-                        control={form.control}
-                        name="address"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">Complete Shipping Address</FormLabel>
-                            <FormControl>
-                              <Textarea 
-                                placeholder="House/Flat No., Street, Landmark, Pincode..." 
-                                className="rounded-[2rem] min-h-[220px] border-foreground/10 bg-[#FDFBF7] p-8 font-bold resize-none focus:ring-accent transition-all text-lg leading-relaxed" 
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage className="text-[10px] font-bold" />
-                          </FormItem>
-                        )}
-                      />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="md:col-span-2">
+                          <FormField
+                            control={form.control}
+                            name="addressLine1"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">House No. / Street / Area</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. Flat 101, Heritage Apartments" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 px-6 font-bold focus:ring-accent transition-all" />
+                                </FormControl>
+                                <FormMessage className="text-[10px] font-bold" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        
+                        <FormField
+                          control={form.control}
+                          name="landmark"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">Landmark (Optional)</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. Near Shiv Temple" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 px-6 font-bold focus:ring-accent transition-all" />
+                              </FormControl>
+                              <FormMessage className="text-[10px] font-bold" />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">City</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Enter City" {...field} className="rounded-2xl border-foreground/10 bg-[#FDFBF7] h-16 md:h-20 px-8 font-bold focus:ring-accent transition-all" />
+                              </FormControl>
+                              <FormMessage className="text-[10px] font-bold" />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="state"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">State</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Enter State" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 px-6 font-bold focus:ring-accent transition-all" />
+                              </FormControl>
+                              <FormMessage className="text-[10px] font-bold" />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="pincode"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-[10px] font-black uppercase tracking-widest text-foreground/30">Pincode</FormLabel>
+                              <FormControl>
+                                <Input placeholder="6-digit Pincode" {...field} className="rounded-xl border-foreground/10 bg-[#FDFBF7] h-14 md:h-16 px-6 font-bold focus:ring-accent transition-all" />
+                              </FormControl>
+                              <FormMessage className="text-[10px] font-bold" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
                       <div className="bg-green-50/50 p-6 rounded-3xl border border-green-100 flex items-center gap-4">
                         <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
@@ -489,10 +569,10 @@ export default function Checkout() {
                       <Button 
                         type="button" 
                         onClick={nextStep}
-                        className="w-full rounded-[2rem] bg-accent hover:bg-accent/95 py-10 md:py-12 text-2xl font-black shadow-2xl shadow-accent/20 hover:scale-[1.01] transition-all active:scale-95 group text-white"
+                        className="w-full rounded-2xl bg-accent hover:bg-accent/95 py-6 md:py-8 text-xl font-black shadow-xl shadow-accent/20 hover:scale-[1.01] transition-all active:scale-95 group text-white"
                       >
                         Finalize & Pay
-                        <ArrowLeft className="ml-3 rotate-180 group-hover:translate-x-1 transition-transform" size={24} />
+                        <ArrowLeft className="ml-3 rotate-180 group-hover:translate-x-1 transition-transform" size={20} />
                       </Button>
                     </motion.div>
                   )}
@@ -524,25 +604,27 @@ export default function Checkout() {
                         </div>
                         <div className="bg-[#FDFBF7] p-8 rounded-3xl border border-foreground/5">
                           <p className="text-[9px] font-black uppercase tracking-widest text-foreground/30 mb-4">Destination</p>
-                          <p className="font-black text-sm leading-relaxed">{form.getValues("address")}</p>
+                          <p className="font-black text-sm leading-relaxed">{form.getValues("addressLine1")}</p>
+                          <p className="font-medium text-foreground/60 text-xs mt-1">{form.getValues("city")}, {form.getValues("state")} - {form.getValues("pincode")}</p>
+                          {form.getValues("landmark") && <p className="text-[10px] italic mt-1 opacity-40">Ref: {form.getValues("landmark")}</p>}
                         </div>
                       </div>
 
                       <Button 
                         type="submit" 
                         disabled={isSubmitting}
-                        className="w-full rounded-[2.5rem] bg-primary hover:bg-primary/95 py-12 md:py-14 text-3xl font-black shadow-2xl shadow-primary/20 hover:scale-[1.01] transition-all active:scale-95 disabled:opacity-50 relative overflow-hidden group text-white"
+                        className="w-full rounded-2xl bg-primary hover:bg-primary/95 py-7 md:py-9 text-xl font-black shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all active:scale-95 disabled:opacity-50 relative overflow-hidden group text-white"
                       >
                         <span className="flex items-center justify-center gap-4 relative z-10 transition-transform group-hover:translate-x-1 duration-300">
                           {isSubmitting ? (
                             <>
-                              <Loader2 className="animate-spin" size={32} />
+                              <Loader2 className="animate-spin" size={24} />
                               Processing Heritage...
                             </>
                           ) : (
                             <>
                               Place Your Order
-                              <ArrowLeft className="rotate-180" size={32} />
+                              <ArrowLeft className="rotate-180" size={24} />
                             </>
                           )}
                         </span>

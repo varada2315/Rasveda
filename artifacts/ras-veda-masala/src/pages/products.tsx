@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, Star, ArrowUpRight, Loader2, Plus } from "lucide-react";
 import { useProducts } from "@/hooks/use-products";
 import { useCart } from "@/hooks/use-cart";
+import { QuickAdd } from "@/components/products/QuickAdd";
 import { Link, useLocation } from "wouter";
 
 export default function Products() {
@@ -11,10 +12,6 @@ export default function Products() {
   const [, setLocation] = useLocation();
   const { addItem } = useCart();
 
-  const handleBuyNow = (product: any) => {
-    addItem(product);
-    setLocation("/checkout");
-  };
 
   if (isLoading) {
     return (
@@ -135,21 +132,8 @@ export default function Products() {
                       </div>
                       
                       <div className="flex gap-2">
-                        <Button 
-                          onClick={() => addItem(product)}
-                          variant="outline"
-                          className="magnetic-hover rounded-2xl border-primary/20 hover:bg-primary/5 text-primary p-4 md:p-5 font-black transition-all active:scale-95"
-                          title="Add to Cart"
-                        >
-                          <Plus size={18} />
-                        </Button>
-                        <Button 
-                          onClick={() => handleBuyNow(product)}
-                          className="magnetic-hover rounded-2xl bg-primary hover:bg-primary/95 text-white px-6 md:px-8 p-4 md:p-5 font-black shadow-lg transition-all active:scale-95 flex items-center gap-2 text-xs md:text-sm"
-                        >
-                          <ShoppingBag size={16} />
-                          Buy Now
-                        </Button>
+                        <QuickAdd product={product} />
+                        <QuickAdd product={product} variant="buyNow" />
                       </div>
                     </div>
                   </div>

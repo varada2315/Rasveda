@@ -51,7 +51,7 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    key={item.id}
+                    key={`${item.id}-${item.selectedWeight}`}
                     className="flex gap-6 p-5 rounded-[2.5rem] bg-white border border-foreground/[0.03] shadow-premium group relative"
                   >
                     <div className="w-24 h-24 shrink-0 bg-[#FDFBF7] rounded-3xl overflow-hidden p-3 border border-foreground/[0.03]">
@@ -62,26 +62,26 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
                         <div className="flex justify-between items-start">
                           <h4 className="font-black text-lg tracking-tight truncate pr-8 group-hover:text-accent transition-colors">{item.name}</h4>
                           <button 
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.id, item.selectedWeight)}
                             className="absolute top-6 right-6 text-foreground/10 hover:text-red-500 transition-colors p-2"
                           >
                             <Trash2 size={18} />
                           </button>
                         </div>
-                        <p className="text-[10px] font-black text-foreground/20 uppercase tracking-[0.2em]">{item.weight}</p>
+                        <p className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{item.selectedWeight}</p>
                       </div>
                       
                       <div className="flex justify-between items-end mt-4">
                         <div className="flex items-center gap-1 bg-secondary/30 rounded-2xl border border-foreground/[0.03] p-1.5 shadow-inner">
                           <button 
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.id, item.selectedWeight, item.quantity - 1)}
                             className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-xl transition-all hover:shadow-sm"
                           >
                             <Minus size={14} className="text-foreground/40" />
                           </button>
                           <span className="w-8 text-center text-xs font-black tracking-tighter">{item.quantity}</span>
                           <button 
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.id, item.selectedWeight, item.quantity + 1)}
                             className="w-8 h-8 flex items-center justify-center hover:bg-white rounded-xl transition-all hover:shadow-sm"
                           >
                             <Plus size={14} className="text-foreground/40" />

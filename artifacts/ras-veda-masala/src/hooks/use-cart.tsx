@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 
 export interface CartItem extends Product {
   quantity: number;
+  selectedWeight: string;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  addItem: (product: Product, weight: string, price: number) => void;
+  removeItem: (productId: number, weight: string) => void;
+  updateQuantity: (productId: number, weight: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -38,15 +39,15 @@ export function CartProvider({ children }: { children: ReactNode }): React.React
     localStorage.setItem("rasveda-cart", JSON.stringify(items));
   }, [items]);
 
-  const addItem = (product: Product) => {
+  const addItem = (product: Product, weight: string, price: number) => {
     setItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      const existing = prev.find((item) => item.id === product.id && item.selectedWeight === weight);
       
       const config = {
         title: existing ? "Increased quantity" : "Added to cart",
         description: existing 
-          ? `${product.name} quantity increased in your cart.`
-          : `${product.name} has been added to your cart.`,
+          ? `${product.name} (${weight}) quantity increased.`
+          : `${product.name} (${weight}) added to your cart.`,
         action: (
           <Button 
             variant="outline" 
@@ -63,24 +64,30 @@ export function CartProvider({ children }: { children: ReactNode }): React.React
 
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          (item.id === product.id && item.selectedWeight === weight)
+            ? { ...item, quantity: item.quantity + 1 } 
+            : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, price, selectedWeight: weight, quantity: 1 }];
     });
   };
 
-  const removeItem = (productId: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== productId));
+  const removeItem = (productId: number, weight: string) => {
+    setItems((prev) => prev.filter((item) => !(item.id === productId && item.selectedWeight === weight)));
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: number, weight: string, quantity: number) => {
     if (quantity < 1) {
-      removeItem(productId);
+      removeItem(productId, weight);
       return;
     }
     setItems((prev) =>
-      prev.map((item) => (item.id === productId ? { ...item, quantity } : item))
+      prev.map((item) => 
+        (item.id === productId && item.selectedWeight === weight) 
+          ? { ...item, quantity } 
+          : item
+      )
     );
   };
 

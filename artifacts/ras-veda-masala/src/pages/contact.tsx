@@ -67,7 +67,7 @@ export default function Contact() {
 
               <div className="grid grid-cols-1 gap-6 md:gap-8">
                 {[
-                  { icon: Phone, title: "Direct Contact", value: "+91 99999 99999", link: "https://wa.me/919999999999", linkText: "Message on WhatsApp" },
+                  { icon: Phone, title: "Direct Contact", value: "+91 86909 95060", link: "https://wa.me/918690995060", linkText: "Message on WhatsApp" },
                   { icon: Mail, title: "Our Registry", value: "info@rasvedamasala.com", link: "mailto:info@rasvedamasala.com", linkText: "Send Official Mail" },
                   { icon: Instagram, title: "Visual Journey", value: "@rasveda.2026", link: "https://www.instagram.com/rasveda.2026", linkText: "Follow the Esthetics" }
                 ].map((item, i) => (
@@ -112,7 +112,7 @@ export default function Contact() {
                   
                   <div className="space-y-3">
                     <label htmlFor="phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/30 ml-6">Digital Contact</label>
-                    <Input id="phone" type="tel" placeholder="+91 00000 00000" className="rounded-2xl border-foreground/[0.08] bg-[#FDFBF7] h-14 md:h-16 px-8 md:px-10 font-bold text-lg md:text-xl shadow-sm focus:ring-accent transition-all" />
+                    <Input id="phone" type="tel" placeholder="+91 86909 95060" className="rounded-2xl border-foreground/[0.08] bg-[#FDFBF7] h-14 md:h-16 px-8 md:px-10 font-bold text-lg md:text-xl shadow-sm focus:ring-accent transition-all" />
                   </div>
                   
                   <div className="space-y-3">

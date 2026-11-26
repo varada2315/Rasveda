@@ -44,7 +44,7 @@ export function Navbar() {
                 src={logoSrc} 
                 alt="Ras Veda Masala" 
                 className={`transition-all duration-700 object-contain ${
-                  isScrolled ? "h-10 md:h-14" : "h-14 md:h-24"
+                  isScrolled ? "h-12 md:h-18" : "h-20 md:h-32"
                 } group-hover:scale-110 drop-shadow-2xl`} 
               />
             </div>

@@ -11,7 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="inline-block bg-white rounded-lg p-2 mb-6">
-              <img src={logoSrc} alt="Ras Veda Masala" className="h-16 object-contain" />
+              <img src={logoSrc} alt="Ras Veda Masala" className="h-24 object-contain" />
             </Link>
             <p className="font-serif italic text-xl text-accent mb-2">Shuddh Swad, Asli Pehchaan</p>
             <p className="text-primary-foreground/80 text-sm tracking-widest uppercase mb-6">

@@ -4,6 +4,9 @@ export interface IStorage {
   getProducts(): Promise<Product[]>;
   getProduct(id: number): Promise<Product | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
+  updateOrderStatus(id: number, status: string, paymentId?: string): Promise<Order | undefined>;
+  getOrder(id: number): Promise<Order | undefined>;
+  getOrderByPaymentId(paymentId: string): Promise<Order | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -22,7 +25,8 @@ export class MemStorage implements IStorage {
         name: "Red Chilli Powder",
         desc: "Bold, fiery, and aromatic. Made from sun-dried red chillies for authentic heat and vibrant colour.",
         fullDesc: "Our RasVeda Red Chilli Powder is crafted from carefully selected chillies, freshly dried and finely ground to deliver the perfect heat, vibrant color, and authentic Indian flavor in every dish.",
-        price: 59,
+        price: 35,
+        pricePerGram: 0.349,
         weight: "100g",
         category: "Powders",
         image: "/images/products/red-chilli.png",
@@ -54,7 +58,8 @@ export class MemStorage implements IStorage {
         name: "Turmeric Powder",
         desc: "Pure, golden turmeric powder. Rich in curcumin, sourced from the finest farms.",
         fullDesc: "Our RasVeda Turmeric Powder is made from premium turmeric roots, finely ground to enrich your food with vibrant color and natural goodness.",
-        price: 59,
+        price: 37,
+        pricePerGram: 0.369,
         weight: "100g",
         category: "Powders",
         image: "/images/products/turmeric.png",
@@ -86,7 +91,8 @@ export class MemStorage implements IStorage {
         name: "Coriander Powder",
         desc: "Freshly ground coriander seeds with a subtle citrus aroma. The backbone of Indian cooking.",
         fullDesc: "Our RasVeda Coriander Powder is made from handpicked coriander seeds, roasted and ground to give your dishes a fresh, aromatic taste.",
-        price: 59,
+        price: 20,
+        pricePerGram: 0.199,
         weight: "100g",
         category: "Powders",
         image: "/images/products/coriander.png",
@@ -132,6 +138,23 @@ export class MemStorage implements IStorage {
     const order: Order = { ...insertOrder, id, status: "pending", createdAt: new Date() };
     this.orders.set(id, order);
     return order;
+  }
+
+  async updateOrderStatus(id: number, status: string, paymentId?: string): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+    
+    const updatedOrder = { ...order, status, paymentId: paymentId || order.paymentId };
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async getOrderByPaymentId(paymentId: string): Promise<Order | undefined> {
+    return Array.from(this.orders.values()).find(o => o.paymentId === paymentId);
   }
 }
 

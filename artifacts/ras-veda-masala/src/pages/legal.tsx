@@ -84,7 +84,7 @@ export function RefundPolicy() {
           <p>To be eligible for a return, your item must be unused, in the original packaging, and in the same condition that you received it. Due to the nature of our food products, we cannot accept returns for opened packets.</p>
           
           <h3>3. Process for Returns</h3>
-          <p>To initiate a return or refund, please contact us via WhatsApp at +91 99999 99999 or email us at info@rasvedamasala.com with your order details and photos of the defective/damaged product.</p>
+          <p>To initiate a return or refund, please contact us via WhatsApp at +91 86909 95060 or email us at info@rasvedamasala.com with your order details and photos of the defective/damaged product.</p>
           
           <h3>4. Refunds</h3>
           <p>Once your return is received and inspected, we will notify you of the approval or rejection of your refund. If approved, your refund will be processed, and a credit will automatically be applied to your original method of payment within 5-7 business days.</p>

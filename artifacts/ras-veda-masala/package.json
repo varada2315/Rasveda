@@ -12,7 +12,6 @@
     "server": "tsx watch server/index.ts",
     "production": "NODE_ENV=production npx tsx server/index.ts"
   },
-
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.4",
@@ -51,6 +50,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "catalog:",
+    "@types/nodemailer": "^8.0.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
@@ -86,6 +86,7 @@
   },
   "dependencies": {
     "dotenv": "^17.4.2",
+    "nodemailer": "^8.0.5",
     "razorpay": "^2.9.6"
   }
 }

@@ -6,6 +6,7 @@ export interface Product {
   desc: string;
   fullDesc?: string;
   price: number;
+  pricePerGram: number;
   weight: string;
   category: string;
   image: string;
